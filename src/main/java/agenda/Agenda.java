@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  */
 public class Agenda {
 
-	Contacto[] lista_contactos = new Contacto[99];
+	Contacto[] lista_contactos = new Contacto[100];
 	private int contador_contactos = 0; // Contador de objetos creados. Variable
 										// muy importante.
 
