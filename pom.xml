@@ -24,7 +24,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>agenda.Agenda</mainClass>
+							<mainClass>agenda.Ejercicio</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
