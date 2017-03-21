@@ -42,20 +42,14 @@ public class Contacto implements Comparable {
         return telefono;
     }
     
+    @Override
     public int compareTo(Object o) {
         Contacto c = (Contacto) o;
         return getNombre().compareTo(c.getNombre());
     }
 
     public Boolean equals(Contacto c) {
-        return (this.getNombre() == c.getNombre());
+        return (this.getNombre().equals(c.getNombre()));
     }
     
-    public void eliminarNumero(Integer telefono){
-        this.getTelefono().remove(telefono);
-    }
-    
-    public void anadirNumero(Integer telefono){
-        this.getTelefono().add(telefono);
-    }
 }

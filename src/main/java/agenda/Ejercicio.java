@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class Ejercicio {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
 		try {
 			BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 			String texto = "";
