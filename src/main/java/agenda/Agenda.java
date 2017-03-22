@@ -1,12 +1,7 @@
 package agenda;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.TreeSet;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Oscar de la Cuesta Campillo. www.palentino.es
@@ -61,11 +56,11 @@ public class Agenda {
         this.basedatos.Anadir(c);
     }
 
-    public void Anadir(String nombre, Integer telefono) {
+    public void Anadir(String nombre, Long telefono) {
         this.basedatos.Anadir(nombre,telefono);
     }
 
-    public void eliminarTelefonoContacto(Contacto contacto, Integer tlf) {
+    public void eliminarTelefonoContacto(Contacto contacto, Long tlf) {
         this.basedatos.eliminarTelefonoContacto(contacto, tlf);
     }
 
@@ -77,7 +72,7 @@ public class Agenda {
          this.basedatos.Eliminar(c);
     }
 
-    public void Consultar(String nombre, int telefono) {
+    public void Consultar(String nombre, Long telefono) {
         this.basedatos.Consultar(nombre,telefono);
     }
 

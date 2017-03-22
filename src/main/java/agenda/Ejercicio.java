@@ -46,7 +46,7 @@ public class Ejercicio {
 					telefono = teclado.readLine();
 					validar = esNumerica(telefono);
 					if (validar) {
-						int telefono_entero = Integer.parseInt(telefono);
+						Long telefono_entero = Long.parseLong(telefono);
 						mi_agenda.Consultar(nombre, telefono_entero);
 						mi_agenda.Anadir(nombre, telefono_entero);
 					} else {

@@ -160,7 +160,7 @@ public class BaseDatos {
         this.lista_contactos.add(c);
     }
 
-    public void Anadir(String nombre, Integer telefono) {
+    public void Anadir(String nombre, Long telefono) {
         if (this.contador_contactos < tope - 1) {
             Contacto contacto = new Contacto(nombre, telefono);
             this.lista_contactos.add(contacto);
@@ -170,7 +170,7 @@ public class BaseDatos {
         }
     }
 
-    public void Consultar(String nombre, Integer telefono) {
+    public void Consultar(String nombre, Long telefono) {
         Iterator<Contacto> it = getLista_contactos().iterator();
         while (it.hasNext()) {
             Contacto aux = it.next();
@@ -182,36 +182,20 @@ public class BaseDatos {
         }
     }
 
-    public void BuscarNombre(String nombre) {
+    public void Buscar(String nombre) {
         boolean encontrado = false;
 
         Iterator<Contacto> it = getLista_contactos().iterator();
         while (it.hasNext()) {
             Contacto aux = it.next();
-            if (aux.getNombre().contains(nombre)) {
+            if (aux.getNombre().equals(nombre)) {
                 System.out.println(aux);
                 encontrado = true;
             }
         }
         if (!encontrado) {
-            System.out.println("No se ha encontrado ningun contacto");
+            System.out.println("Contacto inexistente");
         }
-    }
-    
-    public void BuscarNumero(int numero){
-    	 boolean encontrado = false;
-
-         Iterator<Contacto> it = getLista_contactos().iterator();
-         while ((it.hasNext())&&(!encontrado)) {
-             Contacto aux = it.next();
-             if (aux.getNumeros().iterator().equals(numero)) {
-                 System.out.println(aux);
-                 encontrado = true;
-             }
-         }
-         if (!encontrado) {
-             System.out.println("Contacto inexistente");
-         }
     }
 
     public void Mostrar() {
@@ -262,7 +246,7 @@ public class BaseDatos {
                     if (aux.getNombre().equals(eliminar)) {
                         System.out.println(aux);
                         System.out.println("¿Qué contacto quieres eliminar, introduce el número asociado?");
-                        Integer eliminar_numero = Integer.parseInt(teclado.readLine());
+                        Long eliminar_numero = Long.parseLong(teclado.readLine());
                         System.out.println("¿Estas seguro (S/N)?");
                         String respuesta;
                         respuesta = teclado.readLine();
@@ -270,6 +254,7 @@ public class BaseDatos {
                         if (respuesta.equals("S")) {
                             Contacto auxiliar = aux;
                             Eliminar(aux);
+                            eliminarTelefonoContacto(aux, eliminar_numero);
                             Anadir(auxiliar);
                             this.dismininuirContador();
                             System.out.println("Contacto eliminado correctamente");
@@ -288,7 +273,6 @@ public class BaseDatos {
 
     public void Modificar() {
         try {
-            boolean encontrado = false;
             BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("Nombre de contacto a modificar:");
             String eliminar = teclado.readLine().toUpperCase();
@@ -301,14 +285,14 @@ public class BaseDatos {
                     if (aux.getNombre().equals(eliminar)) {
                         System.out.println(aux);
                         System.out.println("¿Qué contacto quieres modificar?, introduce el número:");
-                        Integer modificar_numero = Integer.parseInt(teclado.readLine());
-
+                        Long modificar_numero = Long.parseLong(teclado.readLine());
                         Contacto auxiliar = aux;
                         Eliminar(aux);
-                        eliminarTelefonoContacto(aux, modificar_numero);
+                        eliminarTelefonoContacto(auxiliar, modificar_numero);
                         System.out.println("Introduce teléfono, formato numerico:");
-                        Integer telefono_nuevo = Integer.parseInt(teclado.readLine());
-                        aux.getTelefono().add(telefono_nuevo);
+                        Long telefono_nuevo = Long.parseLong(teclado.readLine());
+                        auxiliar.getTelefono().add(telefono_nuevo);
+                        Anadir(auxiliar);
 
                     } else {
                         System.out.println("No existe el contacto");
@@ -321,7 +305,7 @@ public class BaseDatos {
         }
     }
 
-    public void eliminarTelefonoContacto(Contacto contacto, Integer tlf) {
+    public void eliminarTelefonoContacto(Contacto contacto, Long tlf) {
         contacto.getTelefono().remove(tlf);
     }
 
@@ -341,7 +325,4 @@ public class BaseDatos {
         this.lista_contactos.remove(c);
     }
 
-    public void Consultar(String nombre, int telefono) {
-        Consultar(nombre, telefono);
-    }
 }

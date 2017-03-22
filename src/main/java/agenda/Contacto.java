@@ -6,17 +6,17 @@ import java.util.ArrayList;
  *
  * @author Oscar de la Cuesta - www.palentino.es
  */
-public class Contacto implements Comparable {
+public class Contacto implements Comparable<Object> {
 
     private String nombre;
-    private ArrayList<Integer> telefonos;
+    private ArrayList<Long> telefonos;
 
     public Contacto() {
         this.nombre = null;
         this.telefonos = new ArrayList<>();
     }
 
-    public Contacto(String nombre, Integer telefono) {
+    public Contacto(String nombre, Long telefono) {
         this.nombre = nombre;
         this.telefonos.add(telefono);
     }
@@ -30,7 +30,7 @@ public class Contacto implements Comparable {
         this.nombre = nomb.toUpperCase();
     }
 
-    public void set_telefono(int telf) {
+    public void set_telefono(Long telf) {
         this.telefonos.add(telf);
     }
 
@@ -38,10 +38,10 @@ public class Contacto implements Comparable {
         return this.nombre;
     }
 
-    public ArrayList<Integer> getNumeros(){
+    public ArrayList<Long> getNumeros(){
     	return this.telefonos;
     }
-    public ArrayList<Integer> getTelefono() {
+    public ArrayList<Long> getTelefono() {
         return telefonos;
     }
     
