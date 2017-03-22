@@ -182,20 +182,36 @@ public class BaseDatos {
         }
     }
 
-    public void Buscar(String nombre) {
+    public void BuscarNombre(String nombre) {
         boolean encontrado = false;
 
         Iterator<Contacto> it = getLista_contactos().iterator();
         while (it.hasNext()) {
             Contacto aux = it.next();
-            if (aux.getNombre().equals(nombre)) {
+            if (aux.getNombre().contains(nombre)) {
                 System.out.println(aux);
                 encontrado = true;
             }
         }
         if (!encontrado) {
-            System.out.println("Contacto inexistente");
+            System.out.println("No se ha encontrado ningun contacto");
         }
+    }
+    
+    public void BuscarNumero(int numero){
+    	 boolean encontrado = false;
+
+         Iterator<Contacto> it = getLista_contactos().iterator();
+         while ((it.hasNext())&&(!encontrado)) {
+             Contacto aux = it.next();
+             if (aux.getNumeros().iterator().equals(numero)) {
+                 System.out.println(aux);
+                 encontrado = true;
+             }
+         }
+         if (!encontrado) {
+             System.out.println("Contacto inexistente");
+         }
     }
 
     public void Mostrar() {

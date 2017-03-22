@@ -9,21 +9,21 @@ import java.util.ArrayList;
 public class Contacto implements Comparable {
 
     private String nombre;
-    private ArrayList<Integer> telefono;
+    private ArrayList<Integer> telefonos;
 
     public Contacto() {
         this.nombre = null;
-        this.telefono = new ArrayList<>();
+        this.telefonos = new ArrayList<>();
     }
 
     public Contacto(String nombre, Integer telefono) {
         this.nombre = nombre;
-        this.telefono.add(telefono);
+        this.telefonos.add(telefono);
     }
 
     @Override
     public String toString() {
-        return "Contacto{" + "nombre=" + nombre + ", telefono=" + telefono + '}';
+        return "Contacto{" + "nombre=" + nombre + ", telefono=" + telefonos + '}';
     }
 
     public void set_nombre(String nomb) {
@@ -31,15 +31,18 @@ public class Contacto implements Comparable {
     }
 
     public void set_telefono(int telf) {
-        this.telefono.add(telf);
+        this.telefonos.add(telf);
     }
 
     public String getNombre() {
         return this.nombre;
     }
 
+    public ArrayList<Integer> getNumeros(){
+    	return this.telefonos;
+    }
     public ArrayList<Integer> getTelefono() {
-        return telefono;
+        return telefonos;
     }
     
     @Override
