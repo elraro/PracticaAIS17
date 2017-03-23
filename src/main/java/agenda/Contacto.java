@@ -1,36 +1,50 @@
 package agenda;
+import java.util.*;
 /**
- *
- * @author Oscar de la Cuesta - www.palentino.es
+ * @author Diego Forte Jara
  */
 public class Contacto {
 	private String nombre;
-	private int telefono;
+	private ArrayList <Telefono> lista = new ArrayList();
 
-	public Contacto() {
+	/*public Contacto() { Tengo dudas de que esto nos sirva para algo
 		this.nombre = null;
-		this.telefono = 0;
-	}
+		this.lista = ;
+	}*/
 
-	public Contacto(String nombre, int telefono) {
+        public Contacto(String nombre) { //Caso de con nombre y sin numero
+            this.nombre = nombre;
+        }
+        
+        public Contacto(Telefono telefono) { //Caso de sin nombre y con numero
+            this.nombre = "";
+            this.lista.add(telefono);
+        }
+        
+	public Contacto(String nombre, Telefono telefono) { //Caso normal
 		this.nombre = nombre;
-		this.telefono = telefono;
+		this.lista.add(telefono);
 	}
 
-	public void set_nombre(String nomb) {
+	public void setNombre(String nomb) {
 		this.nombre = nomb.toUpperCase();
 	}
 
-	public void set_telefono(int telf) {
-		this.telefono = telf;
+	public void setTelefono(Telefono telf) {
+            if (this.lista.indexOf(telf) != -1) { //Evita duplicados en el contacto
+                this.lista.add(telf);
+            }
+            else System.out.println("El numero de telefono introducido ya existe en el contacto");
 	}
 
 	public String getNombre() {
-		return this.nombre;
+                if (this.nombre == "") {
+                    return this.lista.get(0).getNumero(); //Muestra el primer numero de telefono como nombre si no hay nombre
+                }
+                else return this.nombre;
 	}
 
-	public int getTelefono() {
-		return telefono;
+	public Telefono getTelefono(int i) {
+		return this.lista.get(i);
 	}
-
 }
