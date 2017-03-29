@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * @author Diego Forte Jara
  */
-class Telefono {
+class Telefono implements Comparable<Object> {
     
     private String numero; //String por lo que hablamos. Asi podemos empezar con +34 (extension internacional española) y el numero
     private String tipo; 
@@ -35,5 +35,13 @@ class Telefono {
         this.tipo = tipo;
     }
     
-    
+    @Override
+        public int compareTo(Object o) {
+            Telefono c =  (Telefono) o;
+            return getNumero().compareTo(c.getNumero());
+        }
+        
+        public Boolean equals(Contacto c) {
+            return (this.getNumero().equals(c.getNumero()));
+        }
 }
