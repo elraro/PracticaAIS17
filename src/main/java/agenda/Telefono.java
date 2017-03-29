@@ -37,11 +37,11 @@ class Telefono implements Comparable<Object> {
     
     @Override
         public int compareTo(Object o) {
-            Telefono c =  (Telefono) o;
-            return getNumero().compareTo(c.getNumero());
+            Telefono t =  (Telefono) o;
+            return getNumero().compareTo(t.getNumero());
         }
         
-        public Boolean equals(Contacto c) {
-            return (this.getNumero().equals(c.getNumero()));
+        public Boolean equals(Telefono t) {
+            return (this.getNumero().equals(t.getNumero()));
         }
 }
