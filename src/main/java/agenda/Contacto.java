@@ -3,48 +3,61 @@ package agenda;
 import java.util.ArrayList;
 
 /**
- *
- * @author Oscar de la Cuesta - www.palentino.es
+ * @author Diego Forte Jara
  */
 public class Contacto implements Comparable<Object> {
 
     private String nombre;
-    private ArrayList<Long> telefonos;
+    private ArrayList<Telefono> lista = new ArrayList();
 
-    public Contacto() {
-        this.nombre = null;
-        this.telefonos = new ArrayList<>();
-    }
-
-    public Contacto(String nombre, Long telefono) {
+    /*public Contacto() { Tengo dudas de que esto nos sirva para algo
+		this.nombre = null;
+		this.lista = ;
+	}*/
+    public Contacto(String nombre) { //Caso de con nombre y sin numero
         this.nombre = nombre;
-        this.telefonos.add(telefono);
     }
 
-    @Override
-    public String toString() {
-        return "Contacto{" + "nombre=" + nombre + ", telefono=" + telefonos + '}';
+    public Contacto(ArrayList<Telefono> telefono) { //Caso de sin nombre y con numero
+        this.nombre = "";
+        this.lista = telefono;
     }
 
-    public void set_nombre(String nomb) {
+    public Contacto(String nombre, ArrayList<Telefono> telefono) { //Caso normal
+        this.nombre = nombre;
+        this.lista = telefono;
+    }
+
+    public void setNombre(String nomb) {
         this.nombre = nomb.toUpperCase();
     }
 
-    public void set_telefono(Long telf) {
-        this.telefonos.add(telf);
+    public void addTelefono(Telefono telf) {
+        if (this.lista.indexOf(telf) != -1) { //Evita duplicados en el contacto
+            this.lista.add(telf);
+
+        } else {
+            System.out.println("El numero de telefono introducido ya existe en el contacto");
+        }
     }
 
     public String getNombre() {
-        return this.nombre;
+        if (this.nombre == "") {
+            return this.lista.get(0).getNumero(); //Muestra el primer numero de telefono como nombre si no hay nombre
+        } else {
+            return this.nombre;
+        }
     }
 
-    public ArrayList<Long> getNumeros(){
-    	return this.telefonos;
-    }
-    public ArrayList<Long> getTelefono() {
-        return telefonos;
+    public ArrayList<Telefono> getLista() {
+        return lista;
     }
     
+    
+
+    //Para buscar numero de Telefono
+    //Para buscar por nombre
+
     @Override
     public int compareTo(Object o) {
         Contacto c = (Contacto) o;
@@ -54,5 +67,9 @@ public class Contacto implements Comparable<Object> {
     public Boolean equals(Contacto c) {
         return (this.getNombre().equals(c.getNombre()));
     }
-    
+
+    @Override
+    public String toString() {
+        return "Contacto{" + "nombre=" + nombre + ", lista=" + lista + '}';
+    }
 }

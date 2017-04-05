@@ -2,6 +2,10 @@ package agenda;
 
 import java.io.IOException;
 import java.util.TreeSet;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  * @author Oscar de la Cuesta Campillo. www.palentino.es
@@ -9,6 +13,9 @@ import java.util.TreeSet;
 public class Agenda {
 
     private BaseDatos basedatos;									// muy importante.
+	private ArrayList <Contacto> lista_Contactos = new ArrayList();
+	private int contador_contactos = 0; // Contador de objetos creados. Variable
+										// muy importante.
 
     public Agenda() {
         BaseDatos aux = new BaseDatos();
@@ -18,7 +25,6 @@ public class Agenda {
         } catch (IOException | ClassNotFoundException e) {
         }
     }
-
 
     public TreeSet<Contacto> getLista_contactos() {
         return this.basedatos.getLista_contactos();
@@ -56,11 +62,19 @@ public class Agenda {
         this.basedatos.Anadir(c);
     }
 
-    public void Anadir(String nombre, Long telefono) {
+    public void Anadir(String nombre) throws ExcepcionNumero {
+        this.basedatos.Anadir(nombre);
+    }
+    
+    public void Anadir(ArrayList<Telefono> telefono) throws ExcepcionNumero {
+        this.basedatos.Anadir(telefono);
+    }
+    
+    public void Anadir(String nombre, ArrayList<Telefono> telefono) throws ExcepcionNumero {
         this.basedatos.Anadir(nombre,telefono);
     }
 
-    public void eliminarTelefonoContacto(Contacto contacto, Long tlf) {
+    public void eliminarTelefonoContacto(Contacto contacto, Telefono tlf) {
         this.basedatos.eliminarTelefonoContacto(contacto, tlf);
     }
 
@@ -72,7 +86,7 @@ public class Agenda {
          this.basedatos.Eliminar(c);
     }
 
-    public void Consultar(String nombre, Long telefono) {
+    public void Consultar(String nombre, Telefono telefono) {
         this.basedatos.Consultar(nombre,telefono);
     }
 

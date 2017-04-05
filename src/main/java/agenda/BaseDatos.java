@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package agenda;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -160,8 +159,17 @@ public class BaseDatos {
         this.lista_contactos.add(c);
     }
 
-    public void Anadir(String nombre, Long telefono) {
+    public void Anadir(String nombre, ArrayList<Telefono> telefono) throws ExcepcionNumero {
         if (this.contador_contactos < tope - 1) {
+            for (Telefono tel: telefono){
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                try {
+                    PhoneNumber number = phoneUtil.parse(tel.getNumero(), "ES");
+
+                } catch (NumberParseException e) {
+                     throw new ExcepcionNumero();
+                }
+            }
             Contacto contacto = new Contacto(nombre, telefono);
             this.lista_contactos.add(contacto);
             this.aumentarContador();
@@ -170,15 +178,44 @@ public class BaseDatos {
         }
     }
 
-    public void Consultar(String nombre, Long telefono) {
+    public void Anadir(String nombre) throws ExcepcionNumero {
+        if (this.contador_contactos < tope - 1) {
+            Contacto contacto = new Contacto(nombre);
+            this.lista_contactos.add(contacto);
+            this.aumentarContador();
+        } else {
+            System.out.println("La agenda está llena");
+        }
+    }
+    
+    public void Anadir(ArrayList<Telefono> telefono) throws ExcepcionNumero {
+        if (this.contador_contactos < tope - 1) {
+            for (Telefono tel: telefono){
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                try {
+                    PhoneNumber number = phoneUtil.parse(tel.getNumero(), "ES");
+
+                } catch (NumberParseException e) {
+                     throw new ExcepcionNumero();
+                }
+            }
+            Contacto contacto = new Contacto(telefono);
+            this.lista_contactos.add(contacto);
+            this.aumentarContador();
+        } else {
+            System.out.println("La agenda está llena");
+        }
+    }
+    
+    public void Consultar(String nombre, Telefono telefono) {
         Iterator<Contacto> it = getLista_contactos().iterator();
         while (it.hasNext()) {
             Contacto aux = it.next();
-            if (aux.getNombre().equals(nombre) || (aux.getTelefono().equals(telefono))) {
+         /*   if (aux.getNombre().equals(nombre) || (aux.) {
                 System.out.println(aux);
             } else {
                 System.out.println("No existe el contacto");
-            }
+            }*/
         }
     }
 
@@ -254,7 +291,7 @@ public class BaseDatos {
                         if (respuesta.equals("S")) {
                             Contacto auxiliar = aux;
                             Eliminar(aux);
-                            eliminarTelefonoContacto(aux, eliminar_numero);
+                            //eliminarTelefonoContacto(aux, eliminar_numero);
                             Anadir(auxiliar);
                             this.dismininuirContador();
                             System.out.println("Contacto eliminado correctamente");
@@ -288,10 +325,10 @@ public class BaseDatos {
                         Long modificar_numero = Long.parseLong(teclado.readLine());
                         Contacto auxiliar = aux;
                         Eliminar(aux);
-                        eliminarTelefonoContacto(auxiliar, modificar_numero);
+                        //eliminarTelefonoContacto(auxiliar, modificar_numero);
                         System.out.println("Introduce teléfono, formato numerico:");
                         Long telefono_nuevo = Long.parseLong(teclado.readLine());
-                        auxiliar.getTelefono().add(telefono_nuevo);
+                        //auxiliar.getLista().add(telefono_nuevo);
                         Anadir(auxiliar);
 
                     } else {
@@ -305,8 +342,8 @@ public class BaseDatos {
         }
     }
 
-    public void eliminarTelefonoContacto(Contacto contacto, Long tlf) {
-        contacto.getTelefono().remove(tlf);
+    public void eliminarTelefonoContacto(Contacto contacto, Telefono tlf) {
+        contacto.getLista().remove(tlf);
     }
 
     public void Eliminar(String nombre) {
