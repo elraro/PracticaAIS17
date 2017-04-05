@@ -2,6 +2,7 @@ package agenda;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +12,7 @@ import java.util.logging.Logger;
  */
 public class Ejercicio {
 
-	public static void main(String[] args) throws ClassNotFoundException {
+	public static void main(String[] args) throws ClassNotFoundException, ExcepcionNumero {
 		try {
 			BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 			String texto = "";
@@ -46,9 +47,11 @@ public class Ejercicio {
 					telefono = teclado.readLine();
 					validar = esNumerica(telefono);
 					if (validar) {
-						Long telefono_entero = Long.parseLong(telefono);
+						Telefono telefono_entero = new Telefono(telefono);
 						mi_agenda.Consultar(nombre, telefono_entero);
-						mi_agenda.Anadir(nombre, telefono_entero);
+						ArrayList<Telefono> telefono_aux = new ArrayList<>();
+						telefono_aux.add(telefono_entero);
+						mi_agenda.Anadir(nombre, telefono_aux);
 					} else {
 						System.out.println("No es un número, formato de telefono incorrecto.");
 					}

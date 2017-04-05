@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Contacto implements Comparable<Object> {
 
     private String nombre;
-    private ArrayList<Telefono> lista = new ArrayList();
+    private ArrayList<Telefono> lista = new ArrayList<Telefono>();
 
     /*public Contacto() { Tengo dudas de que esto nos sirva para algo
 		this.nombre = null;
@@ -72,4 +72,8 @@ public class Contacto implements Comparable<Object> {
     public String toString() {
         return "Contacto{" + "nombre=" + nombre + ", lista=" + lista + '}';
     }
+
+	public void setLista(ArrayList<Telefono> lista) {
+		this.lista = lista;
+	}
 }
