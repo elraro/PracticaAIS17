@@ -30,7 +30,7 @@ public class Contacto implements Comparable<Object> {
 		this.nombre = nomb.toUpperCase();
 	}
 
-	public void setTelefono(Telefono telf) {
+	public void addTelefono(Telefono telf) {
             if (this.lista.indexOf(telf) != -1) { //Evita duplicados en el contacto
                 this.lista.add(telf);
             }

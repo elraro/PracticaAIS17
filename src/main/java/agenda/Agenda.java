@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 /**
  * @author Oscar de la Cuesta Campillo. www.palentino.es
  */
 public class Agenda {
 
-	Contacto[] lista_contactos = new Contacto[100];
+	private ArrayList <Contacto> lista_Contactos = new ArrayList();
 	private int contador_contactos = 0; // Contador de objetos creados. Variable
 										// muy importante.
 
@@ -24,12 +25,18 @@ public class Agenda {
 
 	}
 
-	public void Anadir(String nombre, int telefono) {
-		if (contador_contactos < 99) {
-			this.lista_contactos[contador_contactos] = new Contacto();
-			this.lista_contactos[contador_contactos].set_nombre(nombre);
-			this.lista_contactos[contador_contactos].set_telefono(telefono);
-			this.contador_contactos++;
+	public void Anadir(String nombre, String telefono) {
+		if (lista_Contactos.size() < 100) {
+                    if (nombre == "") {
+                        Contacto c = new Contacto(telefono);
+                    }
+                    else{ 
+                        Contacto c = new Contacto(nombre, telefono);
+                    }
+                    if (lista_Contactos.indexOf(c.getNombre) != -1) {
+                        //Codigo de añadir telefono a contacto existente
+                    }
+                    else lista_Contactos.add(c);
 			Ordenar();
 		} else {
 			System.out.println("La agenda estÃ¡ llena");
