@@ -68,7 +68,7 @@ public class Idiomas {
 		Espaniol.put("ExitoEliminar","COntacto eliminado correctamente");
 		Espaniol.put("NoEncontrado","Contacto no encontrado");
 		Espaniol.put("NombreModificar","Nombre del contacto a eliminar");
-		Espaniol.put("NumeroModificar", "Telefono del contactoa a eliminar");
+		Espaniol.put("NumeroModificar", "Telefono del contactoa a eliminar ");
 	}
 	
 	public String getIngles(String boton){
