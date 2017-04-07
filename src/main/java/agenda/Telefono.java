@@ -1,23 +1,18 @@
 package agenda;
 
-
 /**
  * @author Diego Forte Jara
  */
 class Telefono implements Comparable<Object> {
 
-	private String numero; // String por lo que hablamos. Asi podemos empezar
-							// con +34 (extension internacional española) y el
-							// numero
-	private Tipo tipo;
+	/**
+	 * String por lo que hablamos. Asi podemos empezar con +34 (extension
+	 * internacional espaÃ±ola) y el numero
+	 */
+	private String numero;
+	private TipoTelefono tipo;
 
-	public Telefono(String numero) { // Constructor para el primer numero
-		this.numero = numero;
-		this.tipo = Tipo.VACIO;
-	}
-
-	public Telefono(String numero, Tipo tipo) {// Constructor para segundo
-												// numero y posteriores
+	public Telefono(String numero, TipoTelefono tipo) {
 		this.numero = numero;
 		this.tipo = tipo;
 	}
@@ -30,11 +25,11 @@ class Telefono implements Comparable<Object> {
 		this.numero = numero;
 	}
 
-	public Tipo getTipo() {
+	public TipoTelefono getTipo() {
 		return this.tipo;
 	}
 
-	public void setTipo(Tipo tipo) {
+	public void setTipo(TipoTelefono tipo) {
 		this.tipo = tipo;
 	}
 

@@ -20,7 +20,6 @@ import javax.swing.WindowConstants;
  */
 public class NuevoTelefono extends JDialog {
 
-
 	private static final long serialVersionUID = 1L;
 	private ButtonGroup grupoBotones;
 	private JRadioButton casaBoton;
@@ -31,7 +30,7 @@ public class NuevoTelefono extends JDialog {
 	private JLabel telefonoLabel;
 	private JLabel tipoLabel;
 	private JButton aceptarBoton;
-    private JButton cancelarBoton;
+	private JButton cancelarBoton;
 
 	public NuevoTelefono() {
 		initComponents();
@@ -105,7 +104,7 @@ public class NuevoTelefono extends JDialog {
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(oficinaBoton, gridBagConstraints);
-		
+
 		movilBoton.setText("Móvil");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
@@ -121,21 +120,20 @@ public class NuevoTelefono extends JDialog {
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(faxBoton, gridBagConstraints);
-		
-        aceptarBoton.setText("Aceptar");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(aceptarBoton, gridBagConstraints);
 
-        cancelarBoton.setText("Cancelar");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(cancelarBoton, gridBagConstraints);
+		aceptarBoton.setText("Aceptar");
+		gridBagConstraints = new java.awt.GridBagConstraints();
+		gridBagConstraints.gridx = 0;
+		gridBagConstraints.gridy = 6;
+		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+		getContentPane().add(aceptarBoton, gridBagConstraints);
 
+		cancelarBoton.setText("Cancelar");
+		gridBagConstraints = new java.awt.GridBagConstraints();
+		gridBagConstraints.gridx = 1;
+		gridBagConstraints.gridy = 6;
+		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+		getContentPane().add(cancelarBoton, gridBagConstraints);
 
 		pack();
 	}

@@ -1,15 +1,15 @@
 package agenda;
 
 /**
- * @author saulalonso
+ * @author Saul Alonso
  */
-public enum Tipo {
+public enum TipoTelefono {
 
-	CASA("Casa"), OFICINA("Oficina"), MOVIL("Movil"), FAX("Fax"), VACIO("Vacio");
+	CASA("Casa"), OFICINA("Oficina"), MOVIL("Movil"), FAX("Fax");
 
 	private String tipo;
 
-	private Tipo(String tipo) {
+	private TipoTelefono(String tipo) {
 		this.tipo = tipo;
 	}
 

@@ -35,7 +35,6 @@ public class NuevoContacto extends JFrame {
 	private JTextField campoNombre;
 	private JLabel etiquetaTelefonos;
 
-
 	public NuevoContacto() {
 		initComponents();
 	}
