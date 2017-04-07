@@ -1,19 +1,9 @@
 package material;
 
-/*
-Before use: set directory where fonts are located in the getFont () method.
-*/
-
-import java.awt.Font;
 import java.awt.Color;
 
 import javax.swing.border.Border;
 //import javax.swing.plaf.ColorUIResource;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.awt.FontFormatException;
 
 public class GUITheme {
 
@@ -28,13 +18,6 @@ public class GUITheme {
 
   private Border menuBorder = new DropShadowBorder (Color.BLACK, 0, 5, 0.3f, 12, true, true, true, true);
   private Border defaultBorder = new DropShadowBorder (Color.BLACK, 5, 5, 0.3f, 12, true, true, true, true);
-
-  private static final Font ITALIC = getFont ("Roboto-Italic.ttf");
-  private static final Font LIGHT = getFont ("Roboto-Light.ttf");
-  private static final Font BOLD = getFont ("Roboto-Medium.ttf");
-  private static final Font REGULAR = getFont ("Roboto-Regular.ttf");
-  private static final Font THIN = getFont ("Roboto-Thin.ttf");
-  private static final Font THIN_ITALIC = getFont ("RobotoCondensed-LightItalic.ttf");
 
   public static final GUITheme LIGHT_THEME = new GUITheme (new Color (230, 230, 230), new Color (220, 220, 220), Color.BLACK, Color.WHITE, Color.BLACK, new Color (230, 230, 230), new Color (0, 0, 0, 100),
                                                            new Color (33, 150, 243), Color.WHITE, new Color (240, 240, 240), Color.WHITE, new Color (245, 0, 87), new Color (255, 64, 129));
@@ -100,44 +83,6 @@ public class GUITheme {
 
   public Border getDefaultBorder () {
     return defaultBorder;
-  }
-
-  public Font getItalic () {
-    return ITALIC;
-  }
-
-  public Font getLight () {
-    return LIGHT;
-  }
-
-  public Font getBold () {
-    return BOLD;
-  }
-
-  public Font getRegular () {
-    return REGULAR;
-  }
-
-  public Font getThin () {
-    return THIN;
-  }
-
-  public Font getThinItalic () {
-    return THIN_ITALIC;
-  }
-
-  private static Font getFont (String fileName) {
-    try {
-      return Font.createFont (Font.TRUETYPE_FONT, new FileInputStream (new File ("src/fonts/" + fileName))).deriveFont (14f);
-    }
-    catch (IOException e) {
-      System.out.println (fileName + " not found. set font directory in GUITheme class, getFont (), line 127");
-      return null;
-    }
-    catch (FontFormatException e) {
-      System.out.println (fileName + " FontFormatException occurred");
-      return null;
-    }
   }
 
   private GUITheme (Color inactiveTextbox, Color activeTextbox, Color textboxText, Color card, Color menuSelectionText, Color menuSelectionBackground,
