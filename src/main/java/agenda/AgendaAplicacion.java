@@ -1,10 +1,7 @@
-/**
- * 
- */
 package agenda;
 
 /**
- * @author alberto
+ * @author Alberto de Dios Bernáez
  *
  */
 public class AgendaAplicacion {

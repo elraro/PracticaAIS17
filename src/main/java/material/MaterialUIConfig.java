@@ -16,21 +16,21 @@ unwanted change.
 
 public class MaterialUIConfig {
   public static void configureUI () {
-    UIManager.put ("Button.font", GUITheme.DARK_THEME.getBold ());
-    UIManager.put("RadioButton.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("CheckBox.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("ComboBox.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("Label.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("MenuBar.font", GUITheme.DARK_THEME.getBold ());
-    UIManager.put("MenuItem.font", GUITheme.DARK_THEME.getRegular ());
-    UIManager.put("Menu.font", GUITheme.DARK_THEME.getBold ());
-    UIManager.put("OptionPane.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("Panel.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("ScrollPane.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("Table.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("TableHeader.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("TextField.font", GUITheme.DARK_THEME.getLight ());
-    UIManager.put("TextArea.font", GUITheme.DARK_THEME.getRegular ());
+//    UIManager.put ("Button.font", GUITheme.DARK_THEME.getBold ());
+//    UIManager.put("RadioButton.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("CheckBox.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("ComboBox.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("Label.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("MenuBar.font", GUITheme.DARK_THEME.getBold ());
+//    UIManager.put("MenuItem.font", GUITheme.DARK_THEME.getRegular ());
+//    UIManager.put("Menu.font", GUITheme.DARK_THEME.getBold ());
+//    UIManager.put("OptionPane.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("Panel.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("ScrollPane.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("Table.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("TableHeader.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("TextField.font", GUITheme.DARK_THEME.getLight ());
+//    UIManager.put("TextArea.font", GUITheme.DARK_THEME.getRegular ());
 
     UIManager.put ("Panel.background", GUITheme.DARK_THEME.getCard ());
     UIManager.put ("Panel.border", BorderFactory.createEmptyBorder ());
@@ -75,6 +75,11 @@ public class MaterialUIConfig {
     UIManager.put ("Button.foreground", GUITheme.DARK_THEME.getBorderlessButtonText ());
     UIManager.put ("Button.highlight", GUITheme.DARK_THEME.getActiveBorderlessButtonBackground ());
     UIManager.put ("Button.border", GUITheme.DARK_THEME.getDefaultBorder ());
+    
+    UIManager.put ("ComboBox.background", GUITheme.DARK_THEME.getInactiveBorderlessButtonBackground ());
+    UIManager.put ("ComboBox.foreground", GUITheme.DARK_THEME.getBorderlessButtonText ());
+    //UIManager.put ("Button.highlight", GUITheme.DARK_THEME.getActiveBorderlessButtonBackground ());
+    //UIManager.put ("ComboBox.border", GUITheme.DARK_THEME.getDefaultBorder ());
 
     try {
       UIManager.setLookAndFeel (UIManager.getCrossPlatformLookAndFeelClassName ());
