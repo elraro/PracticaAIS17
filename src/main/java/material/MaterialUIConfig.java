@@ -1,12 +1,12 @@
 package material;
 
-import javax.swing.UIManager;
 import javax.swing.BorderFactory;
+import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class MaterialUIConfig {
 	public static void configureUI() {
-
+		
 		UIManager.put("Panel.background", GUITheme.DARK_THEME.getCard());
 		UIManager.put("Panel.border", BorderFactory.createEmptyBorder());
 

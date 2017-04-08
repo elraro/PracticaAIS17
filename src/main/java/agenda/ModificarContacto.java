@@ -8,9 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ import javax.swing.WindowConstants;
  *
  * @author Alberto de Dios Bernáez
  */
-public class NuevoContacto extends JDialog {
+public class ModificarContacto extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JButton botonAceptar;
@@ -50,16 +47,23 @@ public class NuevoContacto extends JDialog {
 
 	// Telefonos
 	private List<Telefono> telefonos;
+
 	// Cambios realizados
 	private boolean cambios = false;
-	// Logica
-	private AgendaLogica logica;
+	private String viejoNombre;
+	private List<Telefono> viejosTelefonos;
 
-	public NuevoContacto(AgendaInterfaz padre, AgendaLogica logica) {
+	public ModificarContacto(AgendaInterfaz padre, Contacto c) {
 		super(padre, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
 		this.telefonos = new ArrayList<Telefono>();
-		this.logica = logica;
 		initComponents();
+		setComponents(c);
+		// Vamos a copiar los valores actuales por si no se quiere guardar cambios
+		viejoNombre = new String(c.getNombre());
+		viejosTelefonos = new ArrayList<Telefono>();
+		for(Telefono f : c.getLista()) {
+			viejosTelefonos.add(new Telefono(new String(f.getNumero()), f.getTipo()));
+		}
 		setVisible(true);
 	}
 
@@ -74,17 +78,7 @@ public class NuevoContacto extends JDialog {
 		campoNombre = new JTextField();
 		etiquetaTelefonos = new JLabel();
 		jScrollPane1 = new JScrollPane();
-		listaTelefonos = new JList() {
-			@Override
-			public int locationToIndex(Point location) {
-				int index = super.locationToIndex(location);
-				if (index != -1 && !getCellBounds(index, index).contains(location)) {
-					return -1;
-				} else {
-					return index;
-				}
-			}
-		};
+		listaTelefonos = new JList<Telefono>();
 		botonAnadirTelefono = new JButton();
 		botonModificarTelefono = new JButton();
 		botonBorrarTelefono = new JButton();
@@ -127,22 +121,6 @@ public class NuevoContacto extends JDialog {
 		listaTelefonos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listaTelefonos.setCellRenderer(new CustomCellRender());
 		listaTelefonos.setFocusTraversalPolicyProvider(true);
-		listaTelefonos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				JList list = (JList) e.getSource();
-				if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown() && !isMenuShortcutKeyDown(e)) {
-					list.clearSelection();
-					listPhonesFocusLost();
-				} else {
-					listPhonesMouseClicked();
-				}
-			}
-
-			private boolean isMenuShortcutKeyDown(InputEvent event) {
-				return (event.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
-			}
-		});
 		refrescarLista();
 
 		gridBagConstraints = new GridBagConstraints();
@@ -168,11 +146,6 @@ public class NuevoContacto extends JDialog {
 		getContentPane().add(botonAnadirTelefono, gridBagConstraints);
 
 		botonModificarTelefono.setText("Modificar");
-		botonModificarTelefono.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				modificarButtonMouseClicked();
-			}
-		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 3;
 		gridBagConstraints.gridy = 3;
@@ -181,11 +154,6 @@ public class NuevoContacto extends JDialog {
 		getContentPane().add(botonModificarTelefono, gridBagConstraints);
 
 		botonBorrarTelefono.setText("Borrar");
-		botonBorrarTelefono.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				borrarButtonMouseClicked();
-			}
-		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 3;
 		gridBagConstraints.gridy = 4;
@@ -196,7 +164,7 @@ public class NuevoContacto extends JDialog {
 		botonAceptar.setText("Aceptar");
 		botonAceptar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				aceptarButtonMouseClicked();
+				aceptarButtonMouseClicked(e);
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -207,7 +175,7 @@ public class NuevoContacto extends JDialog {
 		botonCancelar.setText("Cancelar");
 		botonCancelar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				cancelarButtonMouseClicked();
+				cancelarButtonMouseClicked(e);
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -215,9 +183,13 @@ public class NuevoContacto extends JDialog {
 		gridBagConstraints.gridy = 6;
 		getContentPane().add(botonCancelar, gridBagConstraints);
 
-		listPhonesFocusLost();
-		
 		pack();
+	}
+	
+	private void setComponents(Contacto c) {
+		this.campoNombre.setText(c.getNombre());
+		this.telefonos = c.getLista();
+		refrescarLista();
 	}
 
 	/**
@@ -233,7 +205,7 @@ public class NuevoContacto extends JDialog {
 
 		for (Telefono t : this.telefonos) {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			switch (t.getTipo()) {
+			switch(t.getTipo()) {
 			case CASA:
 				panel.add(new JLabel(t.getNumero(), casaImagen, JLabel.LEFT));
 				break;
@@ -251,17 +223,6 @@ public class NuevoContacto extends JDialog {
 		}
 		this.listaTelefonos.setListData(telefonosAux.toArray());
 	}
-	
-
-	private void listPhonesMouseClicked() {
-		botonModificarTelefono.setEnabled(true);
-		botonBorrarTelefono.setEnabled(true);
-	}
-
-	private void listPhonesFocusLost() {
-		botonModificarTelefono.setEnabled(false);
-		botonBorrarTelefono.setEnabled(false);
-	}
 
 	private void anadirButtonMouseClicked(MouseEvent e) {
 		NuevoTelefono nuevoTelefono = new NuevoTelefono(this);
@@ -270,73 +231,40 @@ public class NuevoContacto extends JDialog {
 		if (!telefono.getNumero().equals("")) {
 			this.telefonos.add(telefono);
 			refrescarLista();
+			this.cambios = true;
 		}
 	}
-	
-	private void modificarButtonMouseClicked() {
-		
-	}
-	
-	private void borrarButtonMouseClicked() {
-		JLabel labelPhone = ((JLabel)((JPanel)this.listaTelefonos.getSelectedValue()).getComponent(0));
-		Telefono phone = findPhone(labelPhone.getText(), labelPhone.getIcon());
-				// No puedo hacer eso porque cómo se que ese icono es el tipo de telefono que estoy buscando?
-		int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el contacto seleccionado?","Aviso", JOptionPane.YES_NO_OPTION);
-	    switch(option) {
-	    case 0:
-	    	// Si, borrar el contacto
-	    	this.agendaLogica.quitarContacto(contacto);
-	    	refrescarLista();
-	    	this.listaContactos.clearSelection(); // Si lo borramos lo deseleccionamos, para evitar puntero a null
-	    	this.listContactsFocusLost();
-			this.agendaLogica.guardar();
-	    	break;
-	    case 1:
-	    	// No borrar el contacto
-	    	break;
-	    }
+
+	private void aceptarButtonMouseClicked(MouseEvent e) {
+		// TODO guardar
+		this.dispose();
 	}
 
-	private void aceptarButtonMouseClicked() {
-		guardar();
-	}
-
-	private void cancelarButtonMouseClicked() {
-		if (this.cambios || !this.campoNombre.getText().equals("")) {
-			int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?", "Aviso",
-					JOptionPane.YES_NO_CANCEL_OPTION);
-			switch (opcion) {
-			case 0:
-				// Guardamos cambios
-				guardar();
-				break;
-			case 1:
-				// Deshacemos cambios
-				this.campoNombre.setText("");
-				this.telefonos.clear();
-				break;
-			case 2:
-				// No hacemos nada, opcion Cancelar
-				break;
-			}
+	private void cancelarButtonMouseClicked(MouseEvent e) {
+		if (this.cambios) {
+			int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?","Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+		    switch(opcion) {
+		    case 0:
+		    	// Guardamos cambios
+		    	this.dispose();
+		    	break;
+		    case 1:
+		    	// Deshacemos cambios
+		    	this.campoNombre.setText(this.viejoNombre);
+		    	this.telefonos = this.viejosTelefonos;
+		    	this.dispose();
+		    	break;
+		    case 2:
+		    	// No hacemos nada, opcion Cancelar
+		    	break;
+		    }
 		} else {
 			this.dispose();
 		}
 	}
-
-	/**
-	 * Comprobacion de guardar
-	 */
-	private void guardar() {
-		if (this.logica.getContacto(this.campoNombre.getText()) != null) {
-			// Ya existe contacto con ese nombre
-			JOptionPane.showMessageDialog(this, "Ya existe un contacto con ese nombre. No es posible guardar contactos con el nombre repetido.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		} else {
-			this.dispose();
-		}
-	}
-
+	
 	public Contacto getContacto() {
+		// TODO los distintos tipos de contactos
 		return new Contacto(this.campoNombre.getText(), this.telefonos);
 	}
 

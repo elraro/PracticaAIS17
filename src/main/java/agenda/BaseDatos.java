@@ -71,12 +71,30 @@ public class BaseDatos {
 			fichero.createNewFile();
 		}
 	}
-	
+
 	public boolean anadirContacto(Contacto c) {
 		return this.listaContactos.add(c);
 	}
 	
-	
+	public boolean quitarContacto(Contacto c) {
+		return this.listaContactos.remove(c);
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Contacto getContacto(String nombre) {
+		Iterator<Contacto> iterator = this.listaContactos.iterator();
+		while (iterator.hasNext()) {
+			Contacto node = iterator.next();
+			if (node.getNombre().equals(nombre))
+				return node;
+		}
+		return null; // TODO
+
+	}
+
 	//
 	// // esto creo que no deberia ir así, habria que pasar los datos y que sea
 	// la

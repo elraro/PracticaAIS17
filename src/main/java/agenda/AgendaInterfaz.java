@@ -1,6 +1,7 @@
 package agenda;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -26,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -56,7 +58,7 @@ public class AgendaInterfaz extends JFrame {
 	private JButton botonNuevoContacto;
 	private JButton botonGuardarAgenda;
 	private JTextField areaBusqueda;
-	
+
 	// Lógica de la aplicacion
 	private AgendaLogica agendaLogica;
 
@@ -120,7 +122,7 @@ public class AgendaInterfaz extends JFrame {
 		botonNuevoContacto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				newContactActionPerformed(e);
+				newContactActionPerformed();
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -150,21 +152,19 @@ public class AgendaInterfaz extends JFrame {
 		listaContactos.setFocusTraversalPolicyProvider(true);
 		listaContactos.addMouseListener(new MouseAdapter() {
 			@Override
-            public void mouseClicked(MouseEvent e) {
-                JList list = (JList) e.getSource();
-                if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown()
-                        && !isMenuShortcutKeyDown(e)) {
-                    list.clearSelection();
-                    listContactsFocusLost(e);
-                } else {
-                	listContactsMouseClicked(e);
-                }
-            }
+			public void mouseClicked(MouseEvent e) {
+				JList list = (JList) e.getSource();
+				if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown() && !isMenuShortcutKeyDown(e)) {
+					list.clearSelection();
+					listContactsFocusLost();
+				} else {
+					listContactsMouseClicked();
+				}
+			}
 
-            private boolean isMenuShortcutKeyDown(InputEvent event) {
-                return (event.getModifiers() & Toolkit.getDefaultToolkit()
-                        .getMenuShortcutKeyMask()) != 0;
-            }
+			private boolean isMenuShortcutKeyDown(InputEvent event) {
+				return (event.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
+			}
 		});
 		jScrollPane1.setViewportView(listaContactos);
 
@@ -263,7 +263,7 @@ public class AgendaInterfaz extends JFrame {
 		getContentPane().add(botonExportarCSV, gridBagConstraints);
 
 		getContentPane().setBackground(new Color(74, 74, 74));
-		
+
 		pack();
 	}
 
@@ -279,32 +279,55 @@ public class AgendaInterfaz extends JFrame {
 		}
 	}
 
-	private void listContactsMouseClicked(MouseEvent evt) {
+	private void listContactsMouseClicked() {
 		botonModificarContacto.setEnabled(true);
 		botonBorrarContacto.setEnabled(true);
 	}
 
-	private void listContactsFocusLost(MouseEvent evt) {
+	private void listContactsFocusLost() {
 		botonModificarContacto.setEnabled(false);
 		botonBorrarContacto.setEnabled(false);
 	}
 
-	private void newContactActionPerformed(ActionEvent evt) {
-		NuevoContacto nuevoContacto = new NuevoContacto(this);
+	private void newContactActionPerformed() {
+		NuevoContacto nuevoContacto = new NuevoContacto(this, this.agendaLogica);
 		Contacto contacto = nuevoContacto.getContacto();
-		// TODO
 		System.out.println(contacto);
-		this.agendaLogica.anadirContacto(contacto);
-		refrescarLista();
-		this.agendaLogica.guardar();
+		if (!contacto.getNombre().equals("") || contacto.getLista().size() != 0) {
+			this.agendaLogica.anadirContacto(contacto);
+			refrescarLista();
+			this.agendaLogica.guardar();
+		}
 	}
 
 	private void deleteContactActionPerformed(ActionEvent evt) {
-		// TODO add your handling code here:
+		Contacto contacto = this.agendaLogica.getContacto(((JLabel)((JPanel)this.listaContactos.getSelectedValue()).getComponent(0)).getText());
+		int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el contacto seleccionado?","Aviso", JOptionPane.YES_NO_OPTION);
+	    switch(opcion) {
+	    case 0:
+	    	// Si, borrar el contacto
+	    	this.agendaLogica.quitarContacto(contacto);
+	    	refrescarLista();
+	    	this.listaContactos.clearSelection(); // Si lo borramos lo deseleccionamos, para evitar puntero a null
+	    	this.listContactsFocusLost();
+			this.agendaLogica.guardar();
+	    	break;
+	    case 1:
+	    	// No borrar el contacto
+	    	break;
+	    }
 	}
 
 	private void modifyContactActionPerformed(ActionEvent evt) {
-		// TODO add your handling code here:
+		Contacto contacto = this.agendaLogica.getContacto(((JLabel)((JPanel)this.listaContactos.getSelectedValue()).getComponent(0)).getText());
+		System.out.println(contacto);
+		ModificarContacto modificarContacto = new ModificarContacto(this, contacto);
+		Contacto contactoModificado = modificarContacto.getContacto();
+		this.agendaLogica.quitarContacto(contacto);
+		this.agendaLogica.anadirContacto(contactoModificado);
+		refrescarLista();
+		this.listaContactos.setSelectedIndex(this.agendaLogica.getIndiceContacto(contactoModificado)); // Seleccionamos el contacto modificado
+		this.agendaLogica.guardar();
 	}
 
 	private void importButtonActionPerformed(ActionEvent evt) {
@@ -314,7 +337,7 @@ public class AgendaInterfaz extends JFrame {
 	private void exportButtonActionPerformed(ActionEvent evt) {
 		// TODO add your handling code here:
 	}
-	
+
 	/**
 	 * Método para refrescar la lista de contactos
 	 */

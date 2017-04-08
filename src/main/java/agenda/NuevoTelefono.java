@@ -38,7 +38,7 @@ public class NuevoTelefono extends JDialog {
 	// Tipo de telefono
 	private TipoTelefono tipoTelefono;
 
-	public NuevoTelefono(NuevoContacto padre) {
+	public NuevoTelefono(JDialog padre) {
 		super(padre, "Añadir teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
 		initComponents();
 		setVisible(true);

@@ -28,8 +28,24 @@ public class AgendaLogica {
 		return this.baseDatos.anadirContacto(c);
 	}
 	
+	public boolean quitarContacto(Contacto c) {
+		return this.baseDatos.quitarContacto(c);
+	}
+	
+	public int getIndiceContacto(Contacto c) {
+		return this.listaContactos().indexOf(c);
+	}
+	
 	public void guardar() {
 		this.baseDatos.guardarFichero();
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Contacto getContacto(String nombre) {
+		return this.baseDatos.getContacto(nombre);
 	}
 
 }

@@ -46,24 +46,14 @@ public class Contacto implements Serializable, Comparable<Object> {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	//
-	// public void addTelefono(Telefono telf) {
-	// if (this.lista.indexOf(telf) != -1) { // Evita duplicados en el contacto
-	// this.lista.add(telf);
-	//
-	// } else {
-	// System.out.println("El numero de telefono introducido ya existe en el
-	// contacto");
-	// }
-	// }
 
 	public String getNombre() {
 		return this.nombre;
 	}
 
-	// public ArrayList<Telefono> getLista() {
-	// return lista;
-	// }
+	public List<Telefono> getLista() {
+		return this.listaTelefonos;
+	}
 
 	// Para buscar numero de Telefono
 	// Para buscar por nombre

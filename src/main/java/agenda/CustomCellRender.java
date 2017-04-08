@@ -19,8 +19,8 @@ public class CustomCellRender implements ListCellRenderer {
 			boolean cellHasFocus) {
 		if (value instanceof JPanel) {
 			Component component = (Component) value;
-			component.setForeground(Color.white);
-			component.setBackground(isSelected ? UIManager.getColor("Table.focusCellForeground") : Color.white);
+			component.setForeground(Color.WHITE);
+			component.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
 			return component;
 		} else {
 			return new JLabel("???");
