@@ -15,12 +15,12 @@
 			<artifactId>libphonenumber</artifactId>
 			<version>8.3.2</version>
 		</dependency>
-                <!-- https://mvnrepository.com/artifact/junit/junit -->
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                    <version>4.12</version>
-                </dependency>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 
 	</dependencies>
 	<build>
@@ -36,32 +36,13 @@
 					</archive>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<artifactSet>
-						<includes>
-							<include>org.apache.poi:*</include>
-							<include>commons-codec:*</include>
-							<include>org.apache.commons:*</include>
-							<include>org.apache.xmlbeans:*</include>
-							<include>stax:*</include>
-							<include>com.github.virtuald:*</include>
-						</includes>
-					</artifactSet>
-				</configuration>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+				<version>2.3</version> <executions> <execution> <phase>package</phase> <goals> 
+				<goal>shade</goal> </goals> </execution> </executions> <configuration> <createDependencyReducedPom>false</createDependencyReducedPom> 
+				<artifactSet> <includes> <include>org.apache.poi:*</include> <include>commons-codec:*</include> 
+				<include>org.apache.commons:*</include> <include>org.apache.xmlbeans:*</include> 
+				<include>stax:*</include> <include>com.github.virtuald:*</include> </includes> 
+				</artifactSet> </configuration> </plugin> -->
 		</plugins>
 	</build>
 </project>

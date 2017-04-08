@@ -1,9 +1,11 @@
 package agenda;
 
+import java.io.Serializable;
+
 /**
  * @author Saul Alonso
  */
-public enum TipoTelefono {
+public enum TipoTelefono implements Serializable {
 
 	CASA("Casa"), OFICINA("Oficina"), MOVIL("Movil"), FAX("Fax");
 

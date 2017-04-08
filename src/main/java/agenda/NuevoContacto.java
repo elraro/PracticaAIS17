@@ -1,42 +1,58 @@
 package agenda;
 
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 /**
  *
  * @author Alberto de Dios Bernáez
  */
-public class NuevoContacto extends JFrame {
+public class NuevoContacto extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JButton botonAceptar;
 	private JButton botonAnadirTelefono;
 	private JButton botonBorrarTelefono;
 	private JButton botonCancelar;
-	private JList<String> listaTelefonos;
+	private JList listaTelefonos;
 	private JScrollPane jScrollPane1;
 	private JButton botonModificarTelefono;
 	private JLabel etiquetaNombre;
 	private JTextField campoNombre;
 	private JLabel etiquetaTelefonos;
 
-	public NuevoContacto() {
+	// Telefonos
+	private List<Telefono> telefonos;
+	// Cambios realizados
+	private boolean cambios = false;
+
+	public NuevoContacto(AgendaInterfaz padre) {
+		super(padre, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
+		this.telefonos = new ArrayList<Telefono>();
 		initComponents();
+		setVisible(true);
 	}
 
 	/**
@@ -50,7 +66,7 @@ public class NuevoContacto extends JFrame {
 		campoNombre = new JTextField();
 		etiquetaTelefonos = new JLabel();
 		jScrollPane1 = new JScrollPane();
-		listaTelefonos = new JList<>();
+		listaTelefonos = new JList<Telefono>();
 		botonAnadirTelefono = new JButton();
 		botonModificarTelefono = new JButton();
 		botonBorrarTelefono = new JButton();
@@ -58,7 +74,6 @@ public class NuevoContacto extends JFrame {
 		botonCancelar = new JButton();
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle("Añadir Contacto");
 		setBackground(new Color(255, 255, 255));
 		setMaximumSize(new Dimension(500, 450));
 		setResizable(false);
@@ -91,6 +106,10 @@ public class NuevoContacto extends JFrame {
 		getContentPane().add(etiquetaTelefonos, gridBagConstraints);
 
 		jScrollPane1.setViewportView(listaTelefonos);
+		listaTelefonos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listaTelefonos.setCellRenderer(new CustomCellRender());
+		listaTelefonos.setFocusTraversalPolicyProvider(true);
+		refrescarLista();
 
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
@@ -131,12 +150,22 @@ public class NuevoContacto extends JFrame {
 		getContentPane().add(botonBorrarTelefono, gridBagConstraints);
 
 		botonAceptar.setText("Aceptar");
+		botonAceptar.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				aceptarButtonMouseClicked(e);
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 6;
 		getContentPane().add(botonAceptar, gridBagConstraints);
 
 		botonCancelar.setText("Cancelar");
+		botonCancelar.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				cancelarButtonMouseClicked(e);
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 2;
 		gridBagConstraints.gridy = 6;
@@ -145,8 +174,64 @@ public class NuevoContacto extends JFrame {
 		pack();
 	}
 
-	private void anadirButtonMouseClicked(MouseEvent evt) {
-		NuevoTelefono nuevoTelefono = new NuevoTelefono();
-		nuevoTelefono.setVisible(true);
+	/**
+	 * Método para refrescar la lista de teléfonos
+	 */
+	private void refrescarLista() {
+		List<JPanel> telefonosAux = new ArrayList<JPanel>();
+
+		Icon casaImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/casa.png"));
+		Icon oficinaImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/oficina.png"));
+		Icon movilImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
+		Icon faxImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
+
+		for (Telefono t : this.telefonos) {
+			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			switch(t.getTipo()) {
+			case CASA:
+				panel.add(new JLabel(t.getNumero(), casaImagen, JLabel.LEFT));
+				break;
+			case FAX:
+				panel.add(new JLabel(t.getNumero(), faxImagen, JLabel.LEFT));
+				break;
+			case MOVIL:
+				panel.add(new JLabel(t.getNumero(), movilImagen, JLabel.LEFT));
+				break;
+			case OFICINA:
+				panel.add(new JLabel(t.getNumero(), oficinaImagen, JLabel.LEFT));
+				break;
+			}
+			telefonosAux.add(panel);
+		}
+		this.listaTelefonos.setListData(telefonosAux.toArray());
 	}
+
+	private void anadirButtonMouseClicked(MouseEvent e) {
+		NuevoTelefono nuevoTelefono = new NuevoTelefono(this);
+		Telefono telefono = nuevoTelefono.getTelefono();
+		System.out.println(telefono.toString()); // Debug
+		if (!telefono.getNumero().equals("")) {
+			this.telefonos.add(telefono);
+			refrescarLista();
+		}
+	}
+
+	private void aceptarButtonMouseClicked(MouseEvent e) {
+		// TODO guardar
+		this.dispose();
+	}
+
+	private void cancelarButtonMouseClicked(MouseEvent e) {
+		if (this.cambios) {
+			// TODO se han realizado cambios, preguntar con mensaje
+		} else {
+			this.dispose();
+		}
+	}
+	
+	public Contacto getContacto() {
+		// TODO los distintos tipos de contactos
+		return new Contacto(this.campoNombre.getText(), this.telefonos);
+	}
+
 }

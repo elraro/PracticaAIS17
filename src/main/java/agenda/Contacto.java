@@ -1,14 +1,17 @@
 package agenda;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Diego Forte Jara
  */
-public class Contacto implements Comparable<Object> {
+public class Contacto implements Serializable, Comparable<Object> {
 
+	private static final long serialVersionUID = 1L;
 	private String nombre;
-	private ArrayList<Telefono> lista = new ArrayList<Telefono>();
+	private List<Telefono> listaTelefonos;
 
 	/**
 	 * Caso de con nombre y sin numero
@@ -24,9 +27,9 @@ public class Contacto implements Comparable<Object> {
 	 * 
 	 * @param telefono
 	 */
-	public Contacto(ArrayList<Telefono> telefono) {
+	public Contacto(ArrayList<Telefono> listaTelefono) {
 		this.nombre = "";
-		this.lista = telefono;
+		this.listaTelefonos = listaTelefono;
 	}
 
 	/**
@@ -35,37 +38,32 @@ public class Contacto implements Comparable<Object> {
 	 * @param nombre
 	 * @param telefono
 	 */
-	public Contacto(String nombre, ArrayList<Telefono> telefono) {
+	public Contacto(String nombre, List<Telefono> listaTelefono) {
 		this.nombre = nombre;
-		this.lista = telefono;
+		this.listaTelefonos = listaTelefono;
 	}
 
-	public void setNombre(String nomb) {
-		this.nombre = nomb.toUpperCase();
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-
-	public void addTelefono(Telefono telf) {
-		if (this.lista.indexOf(telf) != -1) { // Evita duplicados en el contacto
-			this.lista.add(telf);
-
-		} else {
-			System.out.println("El numero de telefono introducido ya existe en el contacto");
-		}
-	}
+	//
+	// public void addTelefono(Telefono telf) {
+	// if (this.lista.indexOf(telf) != -1) { // Evita duplicados en el contacto
+	// this.lista.add(telf);
+	//
+	// } else {
+	// System.out.println("El numero de telefono introducido ya existe en el
+	// contacto");
+	// }
+	// }
 
 	public String getNombre() {
-		if (this.nombre == "") {
-			return this.lista.get(0).getNumero(); // Muestra el primer numero de
-													// telefono como nombre si
-													// no hay nombre
-		} else {
-			return this.nombre;
-		}
+		return this.nombre;
 	}
 
-	public ArrayList<Telefono> getLista() {
-		return lista;
-	}
+	// public ArrayList<Telefono> getLista() {
+	// return lista;
+	// }
 
 	// Para buscar numero de Telefono
 	// Para buscar por nombre
@@ -73,19 +71,15 @@ public class Contacto implements Comparable<Object> {
 	@Override
 	public int compareTo(Object o) {
 		Contacto c = (Contacto) o;
-		return getNombre().compareTo(c.getNombre());
+		return this.nombre.compareTo(c.getNombre());
 	}
 
 	public Boolean equals(Contacto c) {
-		return (this.getNombre().equals(c.getNombre()));
+		return (this.nombre.equals(c.getNombre()));
 	}
 
 	@Override
 	public String toString() {
-		return "Contacto{" + "nombre=" + nombre + ", lista=" + lista + '}';
-	}
-
-	public void setLista(ArrayList<Telefono> lista) {
-		this.lista = lista;
+		return "Contacto{" + "nombre=" + this.nombre + ", lista=" + this.listaTelefonos.toString() + '}';
 	}
 }

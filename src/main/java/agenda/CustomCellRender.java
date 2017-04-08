@@ -13,7 +13,7 @@ import javax.swing.UIManager;
  *
  * @author Alberto de Dios Bernáez
  */
-public class ContactoCellRender implements ListCellRenderer {
+public class CustomCellRender implements ListCellRenderer {
 
 	public Component getListCellRendererComponent(JList jlist, Object value, int cellIndex, boolean isSelected,
 			boolean cellHasFocus) {
@@ -23,10 +23,6 @@ public class ContactoCellRender implements ListCellRenderer {
 			component.setBackground(isSelected ? UIManager.getColor("Table.focusCellForeground") : Color.white);
 			return component;
 		} else {
-			// TODO - I get one String here when the JList is first rendered;
-			// proper way to deal with this?
-			// System.out.println("Got something besides a JPanel: " +
-			// value.getClass().getCanonicalName());
 			return new JLabel("???");
 		}
 	}

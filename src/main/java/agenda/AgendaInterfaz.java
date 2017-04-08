@@ -16,6 +16,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -41,10 +43,8 @@ import material.MaterialUIConfig;
 public class AgendaInterfaz extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	// test
-	private Object[] panels;
 
-	// Interface
+	// Interfaz
 	private JButton botonBorrarContacto;
 	private JButton botonExportarCSV;
 	private JButton botonImportarCSV;
@@ -56,6 +56,9 @@ public class AgendaInterfaz extends JFrame {
 	private JButton botonNuevoContacto;
 	private JButton botonGuardarAgenda;
 	private JTextField areaBusqueda;
+	
+	// Lógica de la aplicacion
+	private AgendaLogica agendaLogica;
 
 	/**
 	 * Constructor
@@ -65,38 +68,14 @@ public class AgendaInterfaz extends JFrame {
 	 * 
 	 */
 	public AgendaInterfaz(AgendaLogica agendaLogica) {
-
-		// get our images
-		Icon pingImage = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contact.png"));
-		Icon tracerouteImage = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contact.png"));
-		Icon netstatImage = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contact.png"));
-
-		// add the images to jlabels with text
-		JLabel pingLabel = new JLabel("Contacto1", pingImage, JLabel.LEFT);
-		JLabel tracerouteLabel = new JLabel("Contacto2", tracerouteImage, JLabel.LEFT);
-		JLabel netstatLabel = new JLabel("Contacto3", netstatImage, JLabel.LEFT);
-
-		// create the corresponding panels
-		JPanel pingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JPanel traceroutePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JPanel netstatPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-		// add the labels onto the panels
-		pingPanel.add(pingLabel);
-		traceroutePanel.add(tracerouteLabel);
-		netstatPanel.add(netstatLabel);
-
-		// create a panel array
-		panels = new Object[] { pingPanel, traceroutePanel, netstatPanel };
-
+		this.agendaLogica = agendaLogica;
+		// TODO
+		// Que se cargue el fichero de la agenda, o si no existe, crearlo
+		// añadir esos contactos a la lista
+		// FIN TODO
 		MaterialUIConfig.configureUI();
-
 		initComponents();
-
-		this.getContentPane().setBackground(new java.awt.Color(74, 74, 74));
-
-		listaContactos.setListData(panels);
-
+		refrescarLista();
 		this.setVisible(true);
 	}
 
@@ -167,7 +146,7 @@ public class AgendaInterfaz extends JFrame {
 		getContentPane().add(botonModificarContacto, gridBagConstraints);
 
 		listaContactos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listaContactos.setCellRenderer(new ContactoCellRender());
+		listaContactos.setCellRenderer(new CustomCellRender());
 		listaContactos.setFocusTraversalPolicyProvider(true);
 		listaContactos.addMouseListener(new MouseAdapter() {
 			@Override
@@ -283,6 +262,8 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(botonExportarCSV, gridBagConstraints);
 
+		getContentPane().setBackground(new Color(74, 74, 74));
+		
 		pack();
 	}
 
@@ -309,8 +290,13 @@ public class AgendaInterfaz extends JFrame {
 	}
 
 	private void newContactActionPerformed(ActionEvent evt) {
-		NuevoContacto newContact = new NuevoContacto();
-		newContact.setVisible(true);
+		NuevoContacto nuevoContacto = new NuevoContacto(this);
+		Contacto contacto = nuevoContacto.getContacto();
+		// TODO
+		System.out.println(contacto);
+		this.agendaLogica.anadirContacto(contacto);
+		refrescarLista();
+		this.agendaLogica.guardar();
 	}
 
 	private void deleteContactActionPerformed(ActionEvent evt) {
@@ -327,5 +313,21 @@ public class AgendaInterfaz extends JFrame {
 
 	private void exportButtonActionPerformed(ActionEvent evt) {
 		// TODO add your handling code here:
+	}
+	
+	/**
+	 * Método para refrescar la lista de contactos
+	 */
+	private void refrescarLista() {
+		List<JPanel> contactosAux = new ArrayList<JPanel>();
+
+		Icon contactoImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contacto.png"));
+
+		for (Contacto c : this.agendaLogica.listaContactos()) {
+			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			panel.add(new JLabel(c.getNombre(), contactoImagen, JLabel.LEFT));
+			contactosAux.add(panel);
+		}
+		this.listaContactos.setListData(contactosAux.toArray());
 	}
 }

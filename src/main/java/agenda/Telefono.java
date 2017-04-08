@@ -1,10 +1,13 @@
 package agenda;
 
+import java.io.Serializable;
+
 /**
  * @author Diego Forte Jara
  */
-class Telefono implements Comparable<Object> {
+class Telefono implements Serializable, Comparable<Object> {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * String por lo que hablamos. Asi podemos empezar con +34 (extension
 	 * internacional española) y el numero

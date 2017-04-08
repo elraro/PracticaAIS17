@@ -1,9 +1,12 @@
 package agenda;
 
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -32,8 +35,13 @@ public class NuevoTelefono extends JDialog {
 	private JButton aceptarBoton;
 	private JButton cancelarBoton;
 
-	public NuevoTelefono() {
+	// Tipo de telefono
+	private TipoTelefono tipoTelefono;
+
+	public NuevoTelefono(NuevoContacto padre) {
+		super(padre, "Añadir teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
 		initComponents();
+		setVisible(true);
 	}
 
 	/**
@@ -59,7 +67,6 @@ public class NuevoTelefono extends JDialog {
 		grupoBotones.add(faxBoton);
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle("Añadir teléfono");
 		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
@@ -90,6 +97,14 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(tipoLabel, gridBagConstraints);
 
 		casaBoton.setText("Casa");
+		casaBoton.setSelected(true);
+		this.tipoTelefono = TipoTelefono.CASA;
+		casaBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipoTelefono = TipoTelefono.CASA;
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 2;
@@ -98,6 +113,12 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(casaBoton, gridBagConstraints);
 
 		oficinaBoton.setText("Oficina");
+		oficinaBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipoTelefono = TipoTelefono.OFICINA;
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 3;
@@ -106,6 +127,12 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(oficinaBoton, gridBagConstraints);
 
 		movilBoton.setText("Móvil");
+		movilBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipoTelefono = TipoTelefono.MOVIL;
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 4;
@@ -114,6 +141,12 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(movilBoton, gridBagConstraints);
 
 		faxBoton.setText("Fax");
+		faxBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipoTelefono = TipoTelefono.FAX;
+			}
+		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 5;
@@ -122,6 +155,12 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(faxBoton, gridBagConstraints);
 
 		aceptarBoton.setText("Aceptar");
+		aceptarBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				aceptarBotonActionPerformed(e);
+			}
+		});
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 6;
@@ -129,6 +168,12 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(aceptarBoton, gridBagConstraints);
 
 		cancelarBoton.setText("Cancelar");
+		cancelarBoton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cancelarBotonActionPerformed(e);
+			}
+		});
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 6;
@@ -136,6 +181,23 @@ public class NuevoTelefono extends JDialog {
 		getContentPane().add(cancelarBoton, gridBagConstraints);
 
 		pack();
+	}
+
+	private void cancelarBotonActionPerformed(ActionEvent e) {
+		if (!this.telefonoCampo.equals("")) {
+			// TODO preguntar cambios
+		} else {
+			this.dispose();
+		}
+	}
+
+	private void aceptarBotonActionPerformed(ActionEvent e) {
+		// TODO aceptar
+		this.dispose();
+	}
+
+	public Telefono getTelefono() {
+		return new Telefono(this.telefonoCampo.getText(), this.tipoTelefono);
 	}
 
 }
