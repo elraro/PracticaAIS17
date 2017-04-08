@@ -31,7 +31,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>agenda.Ejercicio</mainClass>
+							<mainClass>agenda.AgendaAplicacion</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
