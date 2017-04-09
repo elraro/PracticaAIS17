@@ -1,27 +1,33 @@
-package agenda;
+package interfac;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
+import contacts.Phone;
+import contacts.TypePhone;
 
 /**
  *
  * @author Alberto de Dios Bernáez
  */
-public class NuevoTelefono extends JDialog {
+public class ModifyPhoneInterface extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private ButtonGroup grupoBotones;
@@ -36,11 +42,35 @@ public class NuevoTelefono extends JDialog {
 	private JButton cancelarBoton;
 
 	// Tipo de telefono
-	private TipoTelefono tipoTelefono;
+	private TypePhone tipoTelefono;
 
-	public NuevoTelefono(JDialog padre) {
-		super(padre, "Añadir teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
+	// Cambios realizados
+	private boolean cambios = false;
+	private String viejoTelefono;
+	private TypePhone viejoTipoTelefono;
+
+	public ModifyPhoneInterface(JDialog father, Phone phone) {
+		super(father, "Modificar teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
 		initComponents();
+		this.viejoTelefono = new String(phone.getPhoneNumber());
+		this.viejoTipoTelefono = phone.getType();
+		this.telefonoCampo.setText(phone.getPhoneNumber());
+		this.tipoTelefono = phone.getType();
+		this.casaBoton.setSelected(false);
+		switch(phone.getType()) {
+		case HOME:
+			this.casaBoton.setSelected(true);
+			break;
+		case FAX:
+			this.faxBoton.setSelected(true);
+			break;
+		case MOBILE:
+			this.movilBoton.setSelected(true);
+			break;
+		case OFFICE:
+			this.oficinaBoton.setSelected(true);
+			break;
+		}
 		setVisible(true);
 	}
 
@@ -98,11 +128,12 @@ public class NuevoTelefono extends JDialog {
 
 		casaBoton.setText("Casa");
 		casaBoton.setSelected(true);
-		this.tipoTelefono = TipoTelefono.CASA;
+		this.tipoTelefono = TypePhone.HOME;
 		casaBoton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TipoTelefono.CASA;
+				tipoTelefono = TypePhone.HOME;
+				cambios = true;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -116,7 +147,8 @@ public class NuevoTelefono extends JDialog {
 		oficinaBoton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TipoTelefono.OFICINA;
+				tipoTelefono = TypePhone.OFFICE;
+				cambios = true;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -130,7 +162,8 @@ public class NuevoTelefono extends JDialog {
 		movilBoton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TipoTelefono.MOVIL;
+				tipoTelefono = TypePhone.MOBILE;
+				cambios = true;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -144,7 +177,8 @@ public class NuevoTelefono extends JDialog {
 		faxBoton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TipoTelefono.FAX;
+				tipoTelefono = TypePhone.FAX;
+				cambios = true;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -184,20 +218,28 @@ public class NuevoTelefono extends JDialog {
 	}
 
 	private void cancelarBotonActionPerformed(ActionEvent e) {
-		if (!this.telefonoCampo.equals("")) {
-			// TODO preguntar cambios
+		if (!this.telefonoCampo.equals(this.viejoTelefono) || cambios) {
+			int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?","Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+		    switch(opcion) {
+		    case 0:
+		    case 1:
+		    	this.dispose();
+		    	break;
+		    case 2:
+		    	// No hacemos nada, opcion Cancelar
+		    	break;
+		    }
 		} else {
 			this.dispose();
 		}
 	}
 
 	private void aceptarBotonActionPerformed(ActionEvent e) {
-		// TODO aceptar
 		this.dispose();
 	}
 
-	public Telefono getTelefono() {
-		return new Telefono(this.telefonoCampo.getText(), this.tipoTelefono);
+	public Phone getTelefono() {
+		return new Phone(this.telefonoCampo.getText(), this.tipoTelefono);
 	}
 
 }

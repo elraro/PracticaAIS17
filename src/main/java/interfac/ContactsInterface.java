@@ -1,4 +1,4 @@
-package agenda;
+package interfac;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -35,6 +35,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
+import contacts.ContactsLogic;
+import contacts.Contact;
 import material.MaterialUIConfig;
 
 /**
@@ -42,42 +44,46 @@ import material.MaterialUIConfig;
  * 
  * @author Alberto de Dios Bernáez
  */
-public class AgendaInterfaz extends JFrame {
+public class ContactsInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
 	// Interfaz
-	private JButton botonBorrarContacto;
-	private JButton botonExportarCSV;
-	private JButton botonImportarCSV;
-	private JScrollPane jScrollPane1;
-	private JList listaContactos;
-	private JButton botonCargarAgenda;
+	private JButton removecontactButton;
+	private JButton exportCSVButton;
+	private JButton importCSVButton;
+	private JScrollPane jScrollPanelContact;
+	private JList jListContacts;
+	private JButton loadFileButton;
 	private JLabel logoURJC;
-	private JButton botonModificarContacto;
-	private JButton botonNuevoContacto;
-	private JButton botonGuardarAgenda;
-	private JTextField areaBusqueda;
+	private JButton modifyContactButton;
+	private JButton newContactButton;
+	private JButton saveFileButton;
+	private JTextField searchTextField;
 
 	// Lógica de la aplicacion
-	private AgendaLogica agendaLogica;
+	private ContactsLogic logicContacts;
+	
+	// Image
+	private final Icon CONTACT_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contacto.png"));
+
 
 	/**
 	 * Constructor
 	 * 
-	 * @param agendaLogica
+	 * @param logicContacts
 	 *            La lógica de la aplicación
 	 * 
 	 */
-	public AgendaInterfaz(AgendaLogica agendaLogica) {
-		this.agendaLogica = agendaLogica;
+	public ContactsInterface(ContactsLogic logicContacts) {
+		this.logicContacts = logicContacts;
 		// TODO
 		// Que se cargue el fichero de la agenda, o si no existe, crearlo
 		// añadir esos contactos a la lista
 		// FIN TODO
 		MaterialUIConfig.configureUI();
 		initComponents();
-		refrescarLista();
+		refreshList();
 		this.setVisible(true);
 	}
 
@@ -88,10 +94,10 @@ public class AgendaInterfaz extends JFrame {
 	private void initComponents() {
 		GridBagConstraints gridBagConstraints;
 
-		botonNuevoContacto = new JButton();
-		botonModificarContacto = new JButton();
-		jScrollPane1 = new JScrollPane();
-		listaContactos = new JList() {
+		newContactButton = new JButton();
+		modifyContactButton = new JButton();
+		jScrollPanelContact = new JScrollPane();
+		jListContacts = new JList() {
 			@Override
 			public int locationToIndex(Point location) {
 				int index = super.locationToIndex(location);
@@ -102,13 +108,13 @@ public class AgendaInterfaz extends JFrame {
 				}
 			}
 		};
-		botonBorrarContacto = new JButton();
-		areaBusqueda = new JTextField();
-		botonImportarCSV = new JButton();
-		botonGuardarAgenda = new JButton();
-		botonCargarAgenda = new JButton();
+		removecontactButton = new JButton();
+		searchTextField = new JTextField();
+		importCSVButton = new JButton();
+		saveFileButton = new JButton();
+		loadFileButton = new JButton();
 		logoURJC = new JLabel();
-		botonExportarCSV = new JButton();
+		exportCSVButton = new JButton();
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Agenda telefónica");
@@ -118,8 +124,8 @@ public class AgendaInterfaz extends JFrame {
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
 
-		botonNuevoContacto.setText("Nuevo contacto");
-		botonNuevoContacto.addActionListener(new ActionListener() {
+		newContactButton.setText("Nuevo contacto");
+		newContactButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				newContactActionPerformed();
@@ -130,11 +136,11 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 1;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonNuevoContacto, gridBagConstraints);
+		getContentPane().add(newContactButton, gridBagConstraints);
 
-		botonModificarContacto.setText("Modificar contacto");
-		botonModificarContacto.setEnabled(false);
-		botonModificarContacto.addActionListener(new ActionListener() {
+		modifyContactButton.setText("Modificar contacto");
+		modifyContactButton.setEnabled(false);
+		modifyContactButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				modifyContactActionPerformed(e);
@@ -145,12 +151,12 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonModificarContacto, gridBagConstraints);
+		getContentPane().add(modifyContactButton, gridBagConstraints);
 
-		listaContactos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listaContactos.setCellRenderer(new CustomCellRender());
-		listaContactos.setFocusTraversalPolicyProvider(true);
-		listaContactos.addMouseListener(new MouseAdapter() {
+		jListContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jListContacts.setCellRenderer(new CustomCellRender());
+		jListContacts.setFocusTraversalPolicyProvider(true);
+		jListContacts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JList list = (JList) e.getSource();
@@ -166,7 +172,7 @@ public class AgendaInterfaz extends JFrame {
 				return (event.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
 			}
 		});
-		jScrollPane1.setViewportView(listaContactos);
+		jScrollPanelContact.setViewportView(jListContacts);
 
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
@@ -176,11 +182,11 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.weighty = 1.0;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(jScrollPane1, gridBagConstraints);
+		getContentPane().add(jScrollPanelContact, gridBagConstraints);
 
-		botonBorrarContacto.setText("Borrar contacto");
-		botonBorrarContacto.setEnabled(false);
-		botonBorrarContacto.addActionListener(new ActionListener() {
+		removecontactButton.setText("Borrar contacto");
+		removecontactButton.setEnabled(false);
+		removecontactButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteContactActionPerformed(e);
@@ -191,21 +197,21 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 3;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonBorrarContacto, gridBagConstraints);
+		getContentPane().add(removecontactButton, gridBagConstraints);
 
-		areaBusqueda.setBackground(new java.awt.Color(74, 74, 74));
-		areaBusqueda.setForeground(new java.awt.Color(255, 255, 255));
-		areaBusqueda.setText("Buscar...");
-		areaBusqueda.setToolTipText("Busca en la agenda");
-		areaBusqueda.setBorder(BorderFactory.createTitledBorder(null, "Buscar", TitledBorder.DEFAULT_JUSTIFICATION,
+		searchTextField.setBackground(new java.awt.Color(74, 74, 74));
+		searchTextField.setForeground(new java.awt.Color(255, 255, 255));
+		searchTextField.setText("Buscar...");
+		searchTextField.setToolTipText("Busca en la agenda");
+		searchTextField.setBorder(BorderFactory.createTitledBorder(null, "Buscar", TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, new Font("Dialog", 1, 12), new Color(255, 255, 255)));
-		areaBusqueda.setSelectedTextColor(new Color(255, 255, 255));
-		areaBusqueda.addFocusListener(new FocusAdapter() {
+		searchTextField.setSelectedTextColor(new Color(255, 255, 255));
+		searchTextField.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent evt) {
 				searchFieldFocusLost(evt);
 			}
 		});
-		areaBusqueda.addMouseListener(new MouseAdapter() {
+		searchTextField.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				searchFieldActionPerformed(e);
 			}
@@ -215,10 +221,10 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 4;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(areaBusqueda, gridBagConstraints);
+		getContentPane().add(searchTextField, gridBagConstraints);
 
-		botonImportarCSV.setText("Importar CSV");
-		botonImportarCSV.addActionListener(new ActionListener() {
+		importCSVButton.setText("Importar CSV");
+		importCSVButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				importButtonActionPerformed(evt);
 			}
@@ -228,29 +234,29 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 5;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonImportarCSV, gridBagConstraints);
+		getContentPane().add(importCSVButton, gridBagConstraints);
 
-		botonGuardarAgenda.setText("Guardar agenda");
+		saveFileButton.setText("Guardar agenda");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 7;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonGuardarAgenda, gridBagConstraints);
+		getContentPane().add(saveFileButton, gridBagConstraints);
 
-		botonCargarAgenda.setText("Cargar agenda");
+		loadFileButton.setText("Cargar agenda");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 8;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonCargarAgenda, gridBagConstraints);
+		getContentPane().add(loadFileButton, gridBagConstraints);
 
 		logoURJC.setIcon(new ImageIcon(getClass().getResource("/imagenes/logo.png")));
 		getContentPane().add(logoURJC, new GridBagConstraints());
 
-		botonExportarCSV.setText("Exportar CSV");
-		botonExportarCSV.addActionListener(new ActionListener() {
+		exportCSVButton.setText("Exportar CSV");
+		exportCSVButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				exportButtonActionPerformed(evt);
 			}
@@ -260,7 +266,7 @@ public class AgendaInterfaz extends JFrame {
 		gridBagConstraints.gridy = 6;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonExportarCSV, gridBagConstraints);
+		getContentPane().add(exportCSVButton, gridBagConstraints);
 
 		getContentPane().setBackground(new Color(74, 74, 74));
 
@@ -268,49 +274,48 @@ public class AgendaInterfaz extends JFrame {
 	}
 
 	private void searchFieldActionPerformed(MouseEvent e) {
-		if (areaBusqueda.getText().equals("Buscar...")) {
-			areaBusqueda.setText("");
+		if (searchTextField.getText().equals("Buscar...")) {
+			searchTextField.setText("");
 		}
 	}
 
 	private void searchFieldFocusLost(FocusEvent evt) {
-		if (areaBusqueda.getText().equals("")) {
-			areaBusqueda.setText("Buscar...");
+		if (searchTextField.getText().equals("")) {
+			searchTextField.setText("Buscar...");
 		}
 	}
 
 	private void listContactsMouseClicked() {
-		botonModificarContacto.setEnabled(true);
-		botonBorrarContacto.setEnabled(true);
+		modifyContactButton.setEnabled(true);
+		removecontactButton.setEnabled(true);
 	}
 
 	private void listContactsFocusLost() {
-		botonModificarContacto.setEnabled(false);
-		botonBorrarContacto.setEnabled(false);
+		modifyContactButton.setEnabled(false);
+		removecontactButton.setEnabled(false);
 	}
 
 	private void newContactActionPerformed() {
-		NuevoContacto nuevoContacto = new NuevoContacto(this, this.agendaLogica);
-		Contacto contacto = nuevoContacto.getContacto();
-		System.out.println(contacto);
-		if (!contacto.getNombre().equals("") || contacto.getLista().size() != 0) {
-			this.agendaLogica.anadirContacto(contacto);
-			refrescarLista();
-			this.agendaLogica.guardar();
+		NewContactInterface newContactInterface = new NewContactInterface(this, this.logicContacts);
+		Contact contact = newContactInterface.getContact();
+		if (!contact.getName().equals("") || contact.getList().size() != 0) {
+			this.logicContacts.addContact(contact);
+			refreshList();
+			this.logicContacts.save();
 		}
 	}
 
 	private void deleteContactActionPerformed(ActionEvent evt) {
-		Contacto contacto = this.agendaLogica.getContacto(((JLabel)((JPanel)this.listaContactos.getSelectedValue()).getComponent(0)).getText());
-		int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el contacto seleccionado?","Aviso", JOptionPane.YES_NO_OPTION);
-	    switch(opcion) {
+		Contact contact = this.logicContacts.getContact(((JLabel)((JPanel)this.jListContacts.getSelectedValue()).getComponent(0)).getText());
+		int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el contacto seleccionado?","Aviso", JOptionPane.YES_NO_OPTION);
+	    switch(option) {
 	    case 0:
 	    	// Si, borrar el contacto
-	    	this.agendaLogica.quitarContacto(contacto);
-	    	refrescarLista();
-	    	this.listaContactos.clearSelection(); // Si lo borramos lo deseleccionamos, para evitar puntero a null
+	    	this.logicContacts.removeContact(contact);
+	    	refreshList();
+	    	this.jListContacts.clearSelection(); // Si lo borramos lo deseleccionamos, para evitar puntero a null
 	    	this.listContactsFocusLost();
-			this.agendaLogica.guardar();
+			this.logicContacts.save();
 	    	break;
 	    case 1:
 	    	// No borrar el contacto
@@ -319,15 +324,14 @@ public class AgendaInterfaz extends JFrame {
 	}
 
 	private void modifyContactActionPerformed(ActionEvent evt) {
-		Contacto contacto = this.agendaLogica.getContacto(((JLabel)((JPanel)this.listaContactos.getSelectedValue()).getComponent(0)).getText());
-		System.out.println(contacto);
-		ModificarContacto modificarContacto = new ModificarContacto(this, contacto);
-		Contacto contactoModificado = modificarContacto.getContacto();
-		this.agendaLogica.quitarContacto(contacto);
-		this.agendaLogica.anadirContacto(contactoModificado);
-		refrescarLista();
-		this.listaContactos.setSelectedIndex(this.agendaLogica.getIndiceContacto(contactoModificado)); // Seleccionamos el contacto modificado
-		this.agendaLogica.guardar();
+		Contact contact = this.logicContacts.getContact(((JLabel)((JPanel)this.jListContacts.getSelectedValue()).getComponent(0)).getText());
+		ModifyContactInterface modifyContactInterface = new ModifyContactInterface(this, contact);
+		Contact modifiedContact = modifyContactInterface.getContacto();
+		this.logicContacts.removeContact(contact);
+		this.logicContacts.addContact(modifiedContact);
+		refreshList();
+		this.jListContacts.setSelectedIndex(this.logicContacts.getIndexContact(modifiedContact)); // Seleccionamos el contacto modificado
+		this.logicContacts.save();
 	}
 
 	private void importButtonActionPerformed(ActionEvent evt) {
@@ -341,16 +345,13 @@ public class AgendaInterfaz extends JFrame {
 	/**
 	 * Método para refrescar la lista de contactos
 	 */
-	private void refrescarLista() {
-		List<JPanel> contactosAux = new ArrayList<JPanel>();
-
-		Icon contactoImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contacto.png"));
-
-		for (Contacto c : this.agendaLogica.listaContactos()) {
+	private void refreshList() {
+		List<JPanel> listcontactAux = new ArrayList<JPanel>();
+		for (Contact c : this.logicContacts.contactList()) {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			panel.add(new JLabel(c.getNombre(), contactoImagen, JLabel.LEFT));
-			contactosAux.add(panel);
+			panel.add(new JLabel(c.getName(), CONTACT_ICON, JLabel.LEFT));
+			listcontactAux.add(panel);
 		}
-		this.listaContactos.setListData(contactosAux.toArray());
+		this.jListContacts.setListData(listcontactAux.toArray());
 	}
 }

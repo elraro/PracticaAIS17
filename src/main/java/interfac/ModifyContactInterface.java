@@ -1,4 +1,4 @@
-package agenda;
+package interfac;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -27,11 +27,14 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
+import contacts.Contact;
+import contacts.Phone;
+
 /**
  *
  * @author Alberto de Dios Bernáez
  */
-public class ModificarContacto extends JDialog {
+public class ModifyContactInterface extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JButton botonAceptar;
@@ -46,23 +49,23 @@ public class ModificarContacto extends JDialog {
 	private JLabel etiquetaTelefonos;
 
 	// Telefonos
-	private List<Telefono> telefonos;
+	private List<Phone> telefonos;
 
 	// Cambios realizados
 	private boolean cambios = false;
 	private String viejoNombre;
-	private List<Telefono> viejosTelefonos;
+	private List<Phone> viejosTelefonos;
 
-	public ModificarContacto(AgendaInterfaz padre, Contacto c) {
+	public ModifyContactInterface(ContactsInterface padre, Contact c) {
 		super(padre, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
-		this.telefonos = new ArrayList<Telefono>();
+		this.telefonos = new ArrayList<Phone>();
 		initComponents();
 		setComponents(c);
 		// Vamos a copiar los valores actuales por si no se quiere guardar cambios
-		viejoNombre = new String(c.getNombre());
-		viejosTelefonos = new ArrayList<Telefono>();
-		for(Telefono f : c.getLista()) {
-			viejosTelefonos.add(new Telefono(new String(f.getNumero()), f.getTipo()));
+		viejoNombre = new String(c.getName());
+		viejosTelefonos = new ArrayList<Phone>();
+		for(Phone f : c.getList()) {
+			viejosTelefonos.add(new Phone(new String(f.getPhoneNumber()), f.getType()));
 		}
 		setVisible(true);
 	}
@@ -78,7 +81,7 @@ public class ModificarContacto extends JDialog {
 		campoNombre = new JTextField();
 		etiquetaTelefonos = new JLabel();
 		jScrollPane1 = new JScrollPane();
-		listaTelefonos = new JList<Telefono>();
+		listaTelefonos = new JList<Phone>();
 		botonAnadirTelefono = new JButton();
 		botonModificarTelefono = new JButton();
 		botonBorrarTelefono = new JButton();
@@ -186,9 +189,9 @@ public class ModificarContacto extends JDialog {
 		pack();
 	}
 	
-	private void setComponents(Contacto c) {
-		this.campoNombre.setText(c.getNombre());
-		this.telefonos = c.getLista();
+	private void setComponents(Contact c) {
+		this.campoNombre.setText(c.getName());
+		this.telefonos = c.getList();
 		refrescarLista();
 	}
 
@@ -203,20 +206,20 @@ public class ModificarContacto extends JDialog {
 		Icon movilImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
 		Icon faxImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
 
-		for (Telefono t : this.telefonos) {
+		for (Phone t : this.telefonos) {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			switch(t.getTipo()) {
-			case CASA:
-				panel.add(new JLabel(t.getNumero(), casaImagen, JLabel.LEFT));
+			switch(t.getType()) {
+			case HOME:
+				panel.add(new JLabel(t.getPhoneNumber(), casaImagen, JLabel.LEFT));
 				break;
 			case FAX:
-				panel.add(new JLabel(t.getNumero(), faxImagen, JLabel.LEFT));
+				panel.add(new JLabel(t.getPhoneNumber(), faxImagen, JLabel.LEFT));
 				break;
-			case MOVIL:
-				panel.add(new JLabel(t.getNumero(), movilImagen, JLabel.LEFT));
+			case MOBILE:
+				panel.add(new JLabel(t.getPhoneNumber(), movilImagen, JLabel.LEFT));
 				break;
-			case OFICINA:
-				panel.add(new JLabel(t.getNumero(), oficinaImagen, JLabel.LEFT));
+			case OFFICE:
+				panel.add(new JLabel(t.getPhoneNumber(), oficinaImagen, JLabel.LEFT));
 				break;
 			}
 			telefonosAux.add(panel);
@@ -225,10 +228,10 @@ public class ModificarContacto extends JDialog {
 	}
 
 	private void anadirButtonMouseClicked(MouseEvent e) {
-		NuevoTelefono nuevoTelefono = new NuevoTelefono(this);
-		Telefono telefono = nuevoTelefono.getTelefono();
+		NewPhoneInterface nuevoTelefono = new NewPhoneInterface(this);
+		Phone telefono = nuevoTelefono.getTelefono();
 		System.out.println(telefono.toString()); // Debug
-		if (!telefono.getNumero().equals("")) {
+		if (!telefono.getPhoneNumber().equals("")) {
 			this.telefonos.add(telefono);
 			refrescarLista();
 			this.cambios = true;
@@ -263,9 +266,9 @@ public class ModificarContacto extends JDialog {
 		}
 	}
 	
-	public Contacto getContacto() {
+	public Contact getContacto() {
 		// TODO los distintos tipos de contactos
-		return new Contacto(this.campoNombre.getText(), this.telefonos);
+		return new Contact(this.campoNombre.getText(), this.telefonos);
 	}
 
 }
