@@ -270,7 +270,7 @@ public class NewContactInterface extends JDialog {
 
 	private void addPhoneButtonMouseClicked(MouseEvent e) {
 		NewPhoneInterface newPhoneInterface = new NewPhoneInterface(this);
-		Phone phone = newPhoneInterface.getTelefono();
+		Phone phone = newPhoneInterface.getPhone();
 		if (!phone.getPhoneNumber().equals("")) {
 			this.listPhones.add(phone);
 			refreshListPhones();
@@ -281,7 +281,7 @@ public class NewContactInterface extends JDialog {
 		JLabel labelPhone = ((JLabel) ((JPanel) this.jListPhones.getSelectedValue()).getComponent(0));
 		Phone phone = findPhone(labelPhone.getText(), labelPhone.getIcon());
 		ModifyPhoneInterface modifyPhoneInterface = new ModifyPhoneInterface(this, phone);
-		Phone mPhone = modifyPhoneInterface.getTelefono();
+		Phone mPhone = modifyPhoneInterface.getPhone();
 		if (!mPhone.getPhoneNumber().equals(phone.getPhoneNumber()) || mPhone.getType() != phone.getType()) {
 			this.listPhones.remove(phone);
 			this.listPhones.add(mPhone);

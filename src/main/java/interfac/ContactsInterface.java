@@ -326,7 +326,7 @@ public class ContactsInterface extends JFrame {
 	private void modifyContactActionPerformed(ActionEvent evt) {
 		Contact contact = this.logicContacts.getContact(((JLabel)((JPanel)this.jListContacts.getSelectedValue()).getComponent(0)).getText());
 		ModifyContactInterface modifyContactInterface = new ModifyContactInterface(this, contact);
-		Contact modifiedContact = modifyContactInterface.getContacto();
+		Contact modifiedContact = modifyContactInterface.getContact();
 		this.logicContacts.removeContact(contact);
 		this.logicContacts.addContact(modifiedContact);
 		refreshList();

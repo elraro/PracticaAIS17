@@ -37,35 +37,41 @@ import contacts.Phone;
 public class ModifyContactInterface extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JButton botonAceptar;
-	private JButton botonAnadirTelefono;
-	private JButton botonBorrarTelefono;
-	private JButton botonCancelar;
-	private JList listaTelefonos;
-	private JScrollPane jScrollPane1;
-	private JButton botonModificarTelefono;
-	private JLabel etiquetaNombre;
-	private JTextField campoNombre;
-	private JLabel etiquetaTelefonos;
+	private JButton acceptButton;
+	private JButton newPhoneButton;
+	private JButton deletePhoneButton;
+	private JButton cancelButton;
+	private JList jListPhones;
+	private JScrollPane jScrollPanelPhones;
+	private JButton modifyPhoneButton;
+	private JLabel nameLabel;
+	private JTextField nameTextField;
+	private JLabel phoneLabel;
 
 	// Telefonos
-	private List<Phone> telefonos;
+	private List<Phone> phones;
 
 	// Cambios realizados
-	private boolean cambios = false;
-	private String viejoNombre;
-	private List<Phone> viejosTelefonos;
+	private boolean changes = false;
+	private String oldName;
+	private List<Phone> oldPhones;
+	
+	// Icons
+	private final Icon HOME_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/casa.png"));
+	private final Icon OFFICE_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/oficina.png"));
+	private final Icon MOBILE_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
+	private final Icon FAX_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
 
 	public ModifyContactInterface(ContactsInterface padre, Contact c) {
 		super(padre, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
-		this.telefonos = new ArrayList<Phone>();
+		this.phones = new ArrayList<Phone>();
 		initComponents();
 		setComponents(c);
 		// Vamos a copiar los valores actuales por si no se quiere guardar cambios
-		viejoNombre = new String(c.getName());
-		viejosTelefonos = new ArrayList<Phone>();
+		oldName = new String(c.getName());
+		oldPhones = new ArrayList<Phone>();
 		for(Phone f : c.getList()) {
-			viejosTelefonos.add(new Phone(new String(f.getPhoneNumber()), f.getType()));
+			oldPhones.add(new Phone(new String(f.getPhoneNumber()), f.getType()));
 		}
 		setVisible(true);
 	}
@@ -77,16 +83,16 @@ public class ModifyContactInterface extends JDialog {
 	private void initComponents() {
 		GridBagConstraints gridBagConstraints;
 
-		etiquetaNombre = new JLabel();
-		campoNombre = new JTextField();
-		etiquetaTelefonos = new JLabel();
-		jScrollPane1 = new JScrollPane();
-		listaTelefonos = new JList<Phone>();
-		botonAnadirTelefono = new JButton();
-		botonModificarTelefono = new JButton();
-		botonBorrarTelefono = new JButton();
-		botonAceptar = new JButton();
-		botonCancelar = new JButton();
+		nameLabel = new JLabel();
+		nameTextField = new JTextField();
+		phoneLabel = new JLabel();
+		jScrollPanelPhones = new JScrollPane();
+		jListPhones = new JList<Phone>();
+		newPhoneButton = new JButton();
+		modifyPhoneButton = new JButton();
+		deletePhoneButton = new JButton();
+		acceptButton = new JButton();
+		cancelButton = new JButton();
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBackground(new Color(255, 255, 255));
@@ -94,37 +100,37 @@ public class ModifyContactInterface extends JDialog {
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
 
-		etiquetaNombre.setForeground(new Color(255, 255, 255));
-		etiquetaNombre.setText("Nombre");
+		nameLabel.setForeground(new Color(255, 255, 255));
+		nameLabel.setText("Nombre");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 0;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(etiquetaNombre, gridBagConstraints);
+		getContentPane().add(nameLabel, gridBagConstraints);
 
-		campoNombre.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		nameTextField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 0;
 		gridBagConstraints.gridwidth = 3;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(campoNombre, gridBagConstraints);
+		getContentPane().add(nameTextField, gridBagConstraints);
 
-		etiquetaTelefonos.setForeground(new Color(255, 255, 255));
-		etiquetaTelefonos.setText("Teléfonos");
+		phoneLabel.setForeground(new Color(255, 255, 255));
+		phoneLabel.setText("Telefonos");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.gridheight = 3;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(etiquetaTelefonos, gridBagConstraints);
+		getContentPane().add(phoneLabel, gridBagConstraints);
 
-		jScrollPane1.setViewportView(listaTelefonos);
-		listaTelefonos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listaTelefonos.setCellRenderer(new CustomCellRender());
-		listaTelefonos.setFocusTraversalPolicyProvider(true);
-		refrescarLista();
+		jScrollPanelPhones.setViewportView(jListPhones);
+		jListPhones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jListPhones.setCellRenderer(new CustomCellRender());
+		jListPhones.setFocusTraversalPolicyProvider(true);
+		refreshList();
 
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
@@ -133,10 +139,10 @@ public class ModifyContactInterface extends JDialog {
 		gridBagConstraints.gridheight = 3;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(jScrollPane1, gridBagConstraints);
+		getContentPane().add(jScrollPanelPhones, gridBagConstraints);
 
-		botonAnadirTelefono.setText("Añadir");
-		botonAnadirTelefono.addMouseListener(new MouseAdapter() {
+		newPhoneButton.setText("Añadir");
+		newPhoneButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				anadirButtonMouseClicked(evt);
 			}
@@ -146,115 +152,109 @@ public class ModifyContactInterface extends JDialog {
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonAnadirTelefono, gridBagConstraints);
+		getContentPane().add(newPhoneButton, gridBagConstraints);
 
-		botonModificarTelefono.setText("Modificar");
+		modifyPhoneButton.setText("Modificar");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 3;
 		gridBagConstraints.gridy = 3;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonModificarTelefono, gridBagConstraints);
+		getContentPane().add(modifyPhoneButton, gridBagConstraints);
 
-		botonBorrarTelefono.setText("Borrar");
+		deletePhoneButton.setText("Borrar");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 3;
 		gridBagConstraints.gridy = 4;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(botonBorrarTelefono, gridBagConstraints);
+		getContentPane().add(deletePhoneButton, gridBagConstraints);
 
-		botonAceptar.setText("Aceptar");
-		botonAceptar.addMouseListener(new MouseAdapter() {
+		acceptButton.setText("Aceptar");
+		acceptButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				aceptarButtonMouseClicked(e);
+				acceptButtonMouseClicked(e);
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 6;
-		getContentPane().add(botonAceptar, gridBagConstraints);
+		getContentPane().add(acceptButton, gridBagConstraints);
 
-		botonCancelar.setText("Cancelar");
-		botonCancelar.addMouseListener(new MouseAdapter() {
+		cancelButton.setText("Cancelar");
+		cancelButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				cancelarButtonMouseClicked(e);
+				cancelButtonMouseClicked(e);
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 2;
 		gridBagConstraints.gridy = 6;
-		getContentPane().add(botonCancelar, gridBagConstraints);
+		getContentPane().add(cancelButton, gridBagConstraints);
 
 		pack();
 	}
 	
 	private void setComponents(Contact c) {
-		this.campoNombre.setText(c.getName());
-		this.telefonos = c.getList();
-		refrescarLista();
+		this.nameTextField.setText(c.getName());
+		this.phones = c.getList();
+		refreshList();
 	}
 
 	/**
 	 * Método para refrescar la lista de teléfonos
 	 */
-	private void refrescarLista() {
-		List<JPanel> telefonosAux = new ArrayList<JPanel>();
+	private void refreshList() {
+		List<JPanel> phonesAux = new ArrayList<JPanel>();
 
-		Icon casaImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/casa.png"));
-		Icon oficinaImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/oficina.png"));
-		Icon movilImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
-		Icon faxImagen = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
-
-		for (Phone t : this.telefonos) {
+		for (Phone t : this.phones) {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			switch(t.getType()) {
 			case HOME:
-				panel.add(new JLabel(t.getPhoneNumber(), casaImagen, JLabel.LEFT));
+				panel.add(new JLabel(t.getPhoneNumber(), HOME_ICON, JLabel.LEFT));
 				break;
 			case FAX:
-				panel.add(new JLabel(t.getPhoneNumber(), faxImagen, JLabel.LEFT));
+				panel.add(new JLabel(t.getPhoneNumber(), FAX_ICON, JLabel.LEFT));
 				break;
 			case MOBILE:
-				panel.add(new JLabel(t.getPhoneNumber(), movilImagen, JLabel.LEFT));
+				panel.add(new JLabel(t.getPhoneNumber(), MOBILE_ICON, JLabel.LEFT));
 				break;
 			case OFFICE:
-				panel.add(new JLabel(t.getPhoneNumber(), oficinaImagen, JLabel.LEFT));
+				panel.add(new JLabel(t.getPhoneNumber(), OFFICE_ICON, JLabel.LEFT));
 				break;
 			}
-			telefonosAux.add(panel);
+			phonesAux.add(panel);
 		}
-		this.listaTelefonos.setListData(telefonosAux.toArray());
+		this.jListPhones.setListData(phonesAux.toArray());
 	}
 
 	private void anadirButtonMouseClicked(MouseEvent e) {
-		NewPhoneInterface nuevoTelefono = new NewPhoneInterface(this);
-		Phone telefono = nuevoTelefono.getTelefono();
-		System.out.println(telefono.toString()); // Debug
-		if (!telefono.getPhoneNumber().equals("")) {
-			this.telefonos.add(telefono);
-			refrescarLista();
-			this.cambios = true;
+		NewPhoneInterface newPhoneInterface = new NewPhoneInterface(this);
+		Phone phone = newPhoneInterface.getPhone();
+		if (!phone.getPhoneNumber().equals("")) {
+			this.phones.add(phone);
+			refreshList();
+			this.changes = true;
 		}
 	}
 
-	private void aceptarButtonMouseClicked(MouseEvent e) {
+	private void acceptButtonMouseClicked(MouseEvent e) {
 		// TODO guardar
 		this.dispose();
 	}
 
-	private void cancelarButtonMouseClicked(MouseEvent e) {
-		if (this.cambios) {
-			int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?","Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
-		    switch(opcion) {
+	private void cancelButtonMouseClicked(MouseEvent e) {
+		if (this.changes) {
+			int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?","Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+		    switch(option) {
 		    case 0:
 		    	// Guardamos cambios
 		    	this.dispose();
 		    	break;
 		    case 1:
 		    	// Deshacemos cambios
-		    	this.campoNombre.setText(this.viejoNombre);
-		    	this.telefonos = this.viejosTelefonos;
+		    	this.nameTextField.setText(this.oldName);
+		    	this.phones = this.oldPhones;
 		    	this.dispose();
 		    	break;
 		    case 2:
@@ -266,9 +266,9 @@ public class ModifyContactInterface extends JDialog {
 		}
 	}
 	
-	public Contact getContacto() {
+	public Contact getContact() {
 		// TODO los distintos tipos de contactos
-		return new Contact(this.campoNombre.getText(), this.telefonos);
+		return new Contact(this.nameTextField.getText(), this.phones);
 	}
 
 }

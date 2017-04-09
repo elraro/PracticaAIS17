@@ -27,19 +27,19 @@ import contacts.TypePhone;
 public class NewPhoneInterface extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private ButtonGroup grupoBotones;
-	private JRadioButton casaBoton;
-	private JRadioButton oficinaBoton;
-	private JRadioButton movilBoton;
-	private JRadioButton faxBoton;
-	private JTextField telefonoCampo;
-	private JLabel telefonoLabel;
-	private JLabel tipoLabel;
-	private JButton aceptarBoton;
-	private JButton cancelarBoton;
+	private ButtonGroup groupButtons;
+	private JRadioButton homeButton;
+	private JRadioButton officeButton;
+	private JRadioButton mobileButton;
+	private JRadioButton faxButton;
+	private JTextField phoneTextField;
+	private JLabel phoneLabel;
+	private JLabel typeLabel;
+	private JButton acceptButton;
+	private JButton cancelButton;
 
 	// Tipo de telefono
-	private TypePhone tipoTelefono;
+	private TypePhone typePhone;
 
 	public NewPhoneInterface(JDialog padre) {
 		super(padre, "Añadir teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
@@ -54,58 +54,58 @@ public class NewPhoneInterface extends JDialog {
 	private void initComponents() {
 		GridBagConstraints gridBagConstraints;
 
-		grupoBotones = new ButtonGroup();
-		telefonoLabel = new JLabel();
-		tipoLabel = new JLabel();
-		telefonoCampo = new JTextField();
-		casaBoton = new JRadioButton();
-		oficinaBoton = new JRadioButton();
-		movilBoton = new JRadioButton();
-		faxBoton = new JRadioButton();
-		aceptarBoton = new JButton();
-		cancelarBoton = new JButton();
-		grupoBotones.add(casaBoton);
-		grupoBotones.add(oficinaBoton);
-		grupoBotones.add(movilBoton);
-		grupoBotones.add(faxBoton);
+		groupButtons = new ButtonGroup();
+		phoneLabel = new JLabel();
+		typeLabel = new JLabel();
+		phoneTextField = new JTextField();
+		homeButton = new JRadioButton();
+		officeButton = new JRadioButton();
+		mobileButton = new JRadioButton();
+		faxButton = new JRadioButton();
+		acceptButton = new JButton();
+		cancelButton = new JButton();
+		groupButtons.add(homeButton);
+		groupButtons.add(officeButton);
+		groupButtons.add(mobileButton);
+		groupButtons.add(faxButton);
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
 
-		telefonoLabel.setForeground(new Color(255, 255, 255));
-		telefonoLabel.setText("Teléfono");
+		phoneLabel.setForeground(new Color(255, 255, 255));
+		phoneLabel.setText("Teléfono");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 0;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(telefonoLabel, gridBagConstraints);
+		getContentPane().add(phoneLabel, gridBagConstraints);
 
-		telefonoCampo.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		phoneTextField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 0;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(telefonoCampo, gridBagConstraints);
+		getContentPane().add(phoneTextField, gridBagConstraints);
 
-		tipoLabel.setForeground(new Color(255, 255, 255));
-		tipoLabel.setText("Tipo");
+		typeLabel.setForeground(new Color(255, 255, 255));
+		typeLabel.setText("Tipo");
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.gridheight = 3;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(tipoLabel, gridBagConstraints);
+		getContentPane().add(typeLabel, gridBagConstraints);
 
-		casaBoton.setText("Casa");
-		casaBoton.setSelected(true);
-		this.tipoTelefono = TypePhone.HOME;
-		casaBoton.addActionListener(new ActionListener() {
+		homeButton.setText("Casa");
+		homeButton.setSelected(true);
+		this.typePhone = TypePhone.HOME;
+		homeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TypePhone.HOME;
+				typePhone = TypePhone.HOME;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -113,13 +113,13 @@ public class NewPhoneInterface extends JDialog {
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(casaBoton, gridBagConstraints);
+		getContentPane().add(homeButton, gridBagConstraints);
 
-		oficinaBoton.setText("Oficina");
-		oficinaBoton.addActionListener(new ActionListener() {
+		officeButton.setText("Oficina");
+		officeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TypePhone.OFFICE;
+				typePhone = TypePhone.OFFICE;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -127,13 +127,13 @@ public class NewPhoneInterface extends JDialog {
 		gridBagConstraints.gridy = 3;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(oficinaBoton, gridBagConstraints);
+		getContentPane().add(officeButton, gridBagConstraints);
 
-		movilBoton.setText("Móvil");
-		movilBoton.addActionListener(new ActionListener() {
+		mobileButton.setText("Móvil");
+		mobileButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TypePhone.MOBILE;
+				typePhone = TypePhone.MOBILE;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -141,13 +141,13 @@ public class NewPhoneInterface extends JDialog {
 		gridBagConstraints.gridy = 4;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(movilBoton, gridBagConstraints);
+		getContentPane().add(mobileButton, gridBagConstraints);
 
-		faxBoton.setText("Fax");
-		faxBoton.addActionListener(new ActionListener() {
+		faxButton.setText("Fax");
+		faxButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tipoTelefono = TypePhone.FAX;
+				typePhone = TypePhone.FAX;
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -155,52 +155,52 @@ public class NewPhoneInterface extends JDialog {
 		gridBagConstraints.gridy = 5;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(faxBoton, gridBagConstraints);
+		getContentPane().add(faxButton, gridBagConstraints);
 
-		aceptarBoton.setText("Aceptar");
-		aceptarBoton.addActionListener(new ActionListener() {
+		acceptButton.setText("Aceptar");
+		acceptButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				aceptarBotonActionPerformed(e);
+				acceptButtonActionPerformed(e);
 			}
 		});
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 6;
 		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-		getContentPane().add(aceptarBoton, gridBagConstraints);
+		getContentPane().add(acceptButton, gridBagConstraints);
 
-		cancelarBoton.setText("Cancelar");
-		cancelarBoton.addActionListener(new ActionListener() {
+		cancelButton.setText("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				cancelarBotonActionPerformed(e);
+				cancelButtonActionPerformed(e);
 			}
 		});
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 6;
 		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-		getContentPane().add(cancelarBoton, gridBagConstraints);
+		getContentPane().add(cancelButton, gridBagConstraints);
 
 		pack();
 	}
 
-	private void cancelarBotonActionPerformed(ActionEvent e) {
-		if (!this.telefonoCampo.equals("")) {
+	private void cancelButtonActionPerformed(ActionEvent e) {
+		if (!this.phoneTextField.equals("")) {
 			// TODO preguntar cambios
 		} else {
 			this.dispose();
 		}
 	}
 
-	private void aceptarBotonActionPerformed(ActionEvent e) {
+	private void acceptButtonActionPerformed(ActionEvent e) {
 		// TODO aceptar
 		this.dispose();
 	}
 
-	public Phone getTelefono() {
-		return new Phone(this.telefonoCampo.getText(), this.tipoTelefono);
+	public Phone getPhone() {
+		return new Phone(this.phoneTextField.getText(), this.typePhone);
 	}
 
 }
