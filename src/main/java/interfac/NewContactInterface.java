@@ -1,7 +1,6 @@
 package interfac;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -31,8 +30,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
-import contacts.ContactsLogic;
 import contacts.Contact;
+import contacts.ContactsLogic;
 import contacts.Phone;
 import contacts.TypePhone;
 
@@ -66,10 +65,10 @@ public class NewContactInterface extends JDialog {
 	private final Icon MOBILE_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
 	private final Icon FAX_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
 
-	public NewContactInterface(ContactsInterface padre, ContactsLogic logica) {
-		super(padre, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
+	public NewContactInterface(ContactsInterface father, ContactsLogic logic) {
+		super(father, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
 		this.listPhones = new ArrayList<Phone>();
-		this.logicContacts = logica;
+		this.logicContacts = logic;
 		initComponents();
 		setVisible(true);
 	}
@@ -292,8 +291,9 @@ public class NewContactInterface extends JDialog {
 	private void removePhoneButtonMouseClicked() {
 		JLabel labelPhone = ((JLabel) ((JPanel) this.jListPhones.getSelectedValue()).getComponent(0));
 		Phone phone = findPhone(labelPhone.getText(), labelPhone.getIcon());
-		int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el teléfono seleccionado?", "Aviso",
-				JOptionPane.YES_NO_OPTION);
+		JLabel label = new JLabel("¿Desea borrar el teléfono seleccionado?");
+		label.setForeground(Color.WHITE);
+		int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_OPTION);
 		switch (option) {
 		case 0:
 			// Yes, delete phone number
@@ -333,8 +333,9 @@ public class NewContactInterface extends JDialog {
 
 	private void cancelButtonMouseClicked() {
 		if (this.changes || !this.nameField.getText().equals("")) {
-			int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?", "Aviso",
-					JOptionPane.YES_NO_CANCEL_OPTION);
+			JLabel label = new JLabel("¿Desea guardar los cambios?");
+			label.setForeground(Color.WHITE);
+			int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (option) {
 			case 0:
 				save();
@@ -343,6 +344,7 @@ public class NewContactInterface extends JDialog {
 				// Undo
 				this.nameField.setText("");
 				this.listPhones.clear();
+				this.dispose();
 				break;
 			case 2:
 				// Cancel option
@@ -359,9 +361,10 @@ public class NewContactInterface extends JDialog {
 	private void save() {
 		if (this.logicContacts.getContact(this.nameField.getText()) != null) {
 			// Ya existe contacto con ese nombre
-			JOptionPane.showMessageDialog(this,
-					"Ya existe un contacto con ese nombre. No es posible guardar contactos con el nombre repetido.",
-					"Aviso", JOptionPane.WARNING_MESSAGE);
+			JLabel label = new JLabel(
+					"Ya existe un contacto con ese nombre. No es posible guardar contactos con el nombre repetido.");
+			label.setForeground(Color.WHITE);
+			JOptionPane.showMessageDialog(this, label, "Aviso", JOptionPane.WARNING_MESSAGE);
 		} else {
 			this.dispose();
 		}

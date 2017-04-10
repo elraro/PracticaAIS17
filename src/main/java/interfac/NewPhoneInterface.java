@@ -13,6 +13,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -188,14 +189,29 @@ public class NewPhoneInterface extends JDialog {
 
 	private void cancelButtonActionPerformed(ActionEvent e) {
 		if (!this.phoneTextField.equals("")) {
-			// TODO preguntar cambios
+			JLabel label = new JLabel("¿Desea guardar los cambios?");
+			label.setForeground(Color.WHITE);
+			int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+			switch (option) {
+			case 0:
+				// Guardamos cambios
+				this.dispose();
+				break;
+			case 1:
+				// Deshacemos cambios
+				this.phoneTextField.setText("");
+				this.dispose();
+				break;
+			case 2:
+				// No hacemos nada, opcion Cancelar
+				break;
+			}
 		} else {
 			this.dispose();
 		}
 	}
 
 	private void acceptButtonActionPerformed(ActionEvent e) {
-		// TODO aceptar
 		this.dispose();
 	}
 

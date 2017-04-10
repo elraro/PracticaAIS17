@@ -1,7 +1,6 @@
 package interfac;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -35,8 +34,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
-import contacts.ContactsLogic;
 import contacts.Contact;
+import contacts.ContactsLogic;
 import material.MaterialUIConfig;
 
 /**
@@ -54,19 +53,16 @@ public class ContactsInterface extends JFrame {
 	private JButton importCSVButton;
 	private JScrollPane jScrollPanelContact;
 	private JList jListContacts;
-	private JButton loadFileButton;
 	private JLabel logoURJC;
 	private JButton modifyContactButton;
 	private JButton newContactButton;
-	private JButton saveFileButton;
 	private JTextField searchTextField;
 
 	// Lógica de la aplicacion
 	private ContactsLogic logicContacts;
-	
+
 	// Image
 	private final Icon CONTACT_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contacto.png"));
-
 
 	/**
 	 * Constructor
@@ -111,8 +107,6 @@ public class ContactsInterface extends JFrame {
 		removecontactButton = new JButton();
 		searchTextField = new JTextField();
 		importCSVButton = new JButton();
-		saveFileButton = new JButton();
-		loadFileButton = new JButton();
 		logoURJC = new JLabel();
 		exportCSVButton = new JButton();
 
@@ -236,22 +230,6 @@ public class ContactsInterface extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(importCSVButton, gridBagConstraints);
 
-		saveFileButton.setText("Guardar agenda");
-		gridBagConstraints = new GridBagConstraints();
-		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 7;
-		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(saveFileButton, gridBagConstraints);
-
-		loadFileButton.setText("Cargar agenda");
-		gridBagConstraints = new GridBagConstraints();
-		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 8;
-		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-		getContentPane().add(loadFileButton, gridBagConstraints);
-
 		logoURJC.setIcon(new ImageIcon(getClass().getResource("/imagenes/logo.png")));
 		getContentPane().add(logoURJC, new GridBagConstraints());
 
@@ -306,31 +284,37 @@ public class ContactsInterface extends JFrame {
 	}
 
 	private void deleteContactActionPerformed(ActionEvent evt) {
-		Contact contact = this.logicContacts.getContact(((JLabel)((JPanel)this.jListContacts.getSelectedValue()).getComponent(0)).getText());
-		int option = JOptionPane.showConfirmDialog((Component) null, "¿Desea borrar el contacto seleccionado?","Aviso", JOptionPane.YES_NO_OPTION);
-	    switch(option) {
-	    case 0:
-	    	// Si, borrar el contacto
-	    	this.logicContacts.removeContact(contact);
-	    	refreshList();
-	    	this.jListContacts.clearSelection(); // Si lo borramos lo deseleccionamos, para evitar puntero a null
-	    	this.listContactsFocusLost();
+		JPanel panel = (JPanel) this.jListContacts.getSelectedValue();
+		JLabel label = (JLabel) panel.getComponent(0);
+		Contact contact = this.logicContacts.getContact(label.getText());
+		label = new JLabel("¿Desea borrar el contacto seleccionado?");
+		label.setForeground(Color.WHITE);
+		int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_OPTION);
+		switch (option) {
+		case 0:
+			// Si, borrar el contacto
+			this.logicContacts.removeContact(contact);
+			refreshList();
+			this.jListContacts.clearSelection();
+			this.listContactsFocusLost();
 			this.logicContacts.save();
-	    	break;
-	    case 1:
-	    	// No borrar el contacto
-	    	break;
-	    }
+			break;
+		case 1:
+			// No borrar el contacto
+			break;
+		}
 	}
 
 	private void modifyContactActionPerformed(ActionEvent evt) {
-		Contact contact = this.logicContacts.getContact(((JLabel)((JPanel)this.jListContacts.getSelectedValue()).getComponent(0)).getText());
-		ModifyContactInterface modifyContactInterface = new ModifyContactInterface(this, contact);
+		JPanel panel = (JPanel) this.jListContacts.getSelectedValue();
+		JLabel label = (JLabel) panel.getComponent(0);
+		Contact contact = this.logicContacts.getContact(label.getText());
+		ModifyContactInterface modifyContactInterface = new ModifyContactInterface(this, contact, logicContacts);
 		Contact modifiedContact = modifyContactInterface.getContact();
 		this.logicContacts.removeContact(contact);
 		this.logicContacts.addContact(modifiedContact);
 		refreshList();
-		this.jListContacts.setSelectedIndex(this.logicContacts.getIndexContact(modifiedContact)); // Seleccionamos el contacto modificado
+		this.jListContacts.setSelectedIndex(this.logicContacts.getIndexContact(modifiedContact));
 		this.logicContacts.save();
 	}
 

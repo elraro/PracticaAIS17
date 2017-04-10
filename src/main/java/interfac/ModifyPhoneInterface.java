@@ -1,7 +1,6 @@
 package interfac;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -56,7 +55,7 @@ public class ModifyPhoneInterface extends JDialog {
 		this.phoneTextField.setText(phone.getPhoneNumber());
 		this.typePhone = phone.getType();
 		this.homeButton.setSelected(false);
-		switch(phone.getType()) {
+		switch (phone.getType()) {
 		case HOME:
 			this.homeButton.setSelected(true);
 			break;
@@ -218,16 +217,18 @@ public class ModifyPhoneInterface extends JDialog {
 
 	private void cancelButtonActionPerformed(ActionEvent e) {
 		if (!this.phoneTextField.equals(this.oldPhone) || changes) {
-			int opcion = JOptionPane.showConfirmDialog((Component) null, "¿Desea guardar los cambios?","Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
-		    switch(opcion) {
-		    case 0:
-		    case 1:
-		    	this.dispose();
-		    	break;
-		    case 2:
-		    	// No hacemos nada, opcion Cancelar
-		    	break;
-		    }
+			JLabel label = new JLabel("¿Desea guardar los cambios?");
+			label.setForeground(Color.WHITE);
+			int opcion = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+			switch (opcion) {
+			case 0:
+			case 1:
+				this.dispose();
+				break;
+			case 2:
+				// No hacemos nada, opcion Cancelar
+				break;
+			}
 		} else {
 			this.dispose();
 		}
