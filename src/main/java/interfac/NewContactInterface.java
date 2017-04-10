@@ -31,6 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import contacts.Contact;
+import contacts.ContactApplication;
 import contacts.ContactsLogic;
 import contacts.Phone;
 import contacts.TypePhone;
@@ -60,13 +61,13 @@ public class NewContactInterface extends JDialog {
 	// Logic of the contact app
 	private ContactsLogic logicContacts;
 	// Icons
-	private final Icon HOME_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/casa.png"));
-	private final Icon OFFICE_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/oficina.png"));
-	private final Icon MOBILE_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/movil.png"));
-	private final Icon FAX_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/fax.png"));
+	private final Icon HOME_ICON = new ImageIcon(getClass().getClassLoader().getResource("images/home.png"));
+	private final Icon OFFICE_ICON = new ImageIcon(getClass().getClassLoader().getResource("images/office.png"));
+	private final Icon MOBILE_ICON = new ImageIcon(getClass().getClassLoader().getResource("images/mobile.png"));
+	private final Icon FAX_ICON = new ImageIcon(getClass().getClassLoader().getResource("images/fax.png"));
 
 	public NewContactInterface(ContactsInterface father, ContactsLogic logic) {
-		super(father, "Añadir contacto", Dialog.ModalityType.DOCUMENT_MODAL);
+		super(father, ContactApplication.language.getProperty("NewContact"), Dialog.ModalityType.DOCUMENT_MODAL);
 		this.listPhones = new ArrayList<Phone>();
 		this.logicContacts = logic;
 		initComponents();
@@ -108,7 +109,7 @@ public class NewContactInterface extends JDialog {
 		getContentPane().setLayout(new GridBagLayout());
 
 		nameLabel.setForeground(new Color(255, 255, 255));
-		nameLabel.setText("Nombre");
+		nameLabel.setText(ContactApplication.language.getProperty("Name"));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 0;
@@ -125,7 +126,7 @@ public class NewContactInterface extends JDialog {
 		getContentPane().add(nameField, gridBagConstraints);
 
 		phonesLabel.setForeground(new Color(255, 255, 255));
-		phonesLabel.setText("Telefonos");
+		phonesLabel.setText(ContactApplication.language.getProperty("Phones"));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 2;
@@ -164,7 +165,7 @@ public class NewContactInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(jScrollPanelPhones, gridBagConstraints);
 
-		addPhoneButton.setText("Añadir");
+		addPhoneButton.setText(ContactApplication.language.getProperty("AddPhone"));
 		addPhoneButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				addPhoneButtonMouseClicked(evt);
@@ -177,7 +178,7 @@ public class NewContactInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(addPhoneButton, gridBagConstraints);
 
-		modifyPhoneButton.setText("Modificar");
+		modifyPhoneButton.setText(ContactApplication.language.getProperty("ModifyPhone"));
 		modifyPhoneButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				modifyPhoneButtonMouseClicked();
@@ -190,7 +191,7 @@ public class NewContactInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(modifyPhoneButton, gridBagConstraints);
 
-		removePhoneButton.setText("Borrar");
+		removePhoneButton.setText(ContactApplication.language.getProperty("DeletePhone"));
 		removePhoneButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				removePhoneButtonMouseClicked();
@@ -203,7 +204,7 @@ public class NewContactInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(removePhoneButton, gridBagConstraints);
 
-		acceptButton.setText("Aceptar");
+		acceptButton.setText(ContactApplication.language.getProperty("Accept"));
 		acceptButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				acceptButtonMouseClicked();
@@ -214,7 +215,7 @@ public class NewContactInterface extends JDialog {
 		gridBagConstraints.gridy = 6;
 		getContentPane().add(acceptButton, gridBagConstraints);
 
-		cancelButton.setText("Cancelar");
+		cancelButton.setText(ContactApplication.language.getProperty("Cancel"));
 		cancelButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				cancelButtonMouseClicked();
@@ -270,8 +271,7 @@ public class NewContactInterface extends JDialog {
 	private void addPhoneButtonMouseClicked(MouseEvent e) {
 		NewPhoneInterface newPhoneInterface = new NewPhoneInterface(this);
 		Phone phone = newPhoneInterface.getPhone();
-		System.out.println(phone);
-		if (!String.valueOf(phone.getPhoneNumber().getNationalNumber()).equals("")) {
+		if (phone != null) {
 			this.listPhones.add(phone);
 			refreshListPhones();
 		}
@@ -292,9 +292,9 @@ public class NewContactInterface extends JDialog {
 	private void removePhoneButtonMouseClicked() {
 		JLabel labelPhone = ((JLabel) ((JPanel) this.jListPhones.getSelectedValue()).getComponent(0));
 		Phone phone = findPhone(labelPhone.getText(), labelPhone.getIcon());
-		JLabel label = new JLabel("¿Desea borrar el teléfono seleccionado?");
+		JLabel label = new JLabel(ContactApplication.language.getProperty("DeletePhoneWarning"));
 		label.setForeground(Color.WHITE);
-		int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_OPTION);
+		int option = JOptionPane.showConfirmDialog(null, label, ContactApplication.language.getProperty("Warning"), JOptionPane.YES_NO_OPTION);
 		switch (option) {
 		case 0:
 			// Yes, delete phone number
@@ -334,9 +334,9 @@ public class NewContactInterface extends JDialog {
 
 	private void cancelButtonMouseClicked() {
 		if (this.changes || !this.nameField.getText().equals("")) {
-			JLabel label = new JLabel("¿Desea guardar los cambios?");
+			JLabel label = new JLabel(ContactApplication.language.getProperty("SaveChanges"));
 			label.setForeground(Color.WHITE);
-			int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, label, ContactApplication.language.getProperty("Warning"), JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (option) {
 			case 0:
 				save();
@@ -363,9 +363,9 @@ public class NewContactInterface extends JDialog {
 		if (this.logicContacts.getContact(this.nameField.getText()) != null) {
 			// Ya existe contacto con ese nombre
 			JLabel label = new JLabel(
-					"Ya existe un contacto con ese nombre. No es posible guardar contactos con el nombre repetido.");
+					ContactApplication.language.getProperty("DuplicatedContact"));
 			label.setForeground(Color.WHITE);
-			JOptionPane.showMessageDialog(this, label, "Aviso", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, label, ContactApplication.language.getProperty("Warning"), JOptionPane.WARNING_MESSAGE);
 		} else {
 			this.dispose();
 		}

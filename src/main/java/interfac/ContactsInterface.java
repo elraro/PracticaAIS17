@@ -38,6 +38,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import contacts.Contact;
+import contacts.ContactApplication;
 import contacts.ContactsLogic;
 import material.MaterialUIConfig;
 
@@ -50,7 +51,7 @@ public class ContactsInterface extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	// Interfaz
+	// Interface
 	private JButton removecontactButton;
 	private JButton exportCSVButton;
 	private JButton importCSVButton;
@@ -61,11 +62,12 @@ public class ContactsInterface extends JFrame {
 	private JButton newContactButton;
 	private JTextField searchTextField;
 
-	// Lógica de la aplicacion
+	// Logic of the app
 	private ContactsLogic logicContacts;
 
 	// Image
-	private final Icon CONTACT_ICON = new ImageIcon(getClass().getClassLoader().getResource("imagenes/contacto.png"));
+	private final Icon CONTACT_ICON = new ImageIcon(getClass().getClassLoader().getResource("images/contact.png"));
+	private final ImageIcon FAVICON = new ImageIcon(getClass().getClassLoader().getResource("images/logo_icon.png"));
 
 	/**
 	 * Constructor
@@ -76,10 +78,6 @@ public class ContactsInterface extends JFrame {
 	 */
 	public ContactsInterface(ContactsLogic logicContacts) {
 		this.logicContacts = logicContacts;
-		// TODO
-		// Que se cargue el fichero de la agenda, o si no existe, crearlo
-		// añadir esos contactos a la lista
-		// FIN TODO
 		MaterialUIConfig.configureUI();
 		initComponents();
 		refreshList();
@@ -114,14 +112,14 @@ public class ContactsInterface extends JFrame {
 		exportCSVButton = new JButton();
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("Agenda telefónica");
+		setTitle(ContactApplication.language.getProperty("ContactsTitle"));
 		setBackground(new Color(0, 0, 0));
 		setMaximumSize(new Dimension(426, 238));
 		setMinimumSize(new Dimension(426, 238));
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
 
-		newContactButton.setText("Nuevo contacto");
+		newContactButton.setText(ContactApplication.language.getProperty("NewContact"));
 		newContactButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -135,7 +133,7 @@ public class ContactsInterface extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(newContactButton, gridBagConstraints);
 
-		modifyContactButton.setText("Modificar contacto");
+		modifyContactButton.setText(ContactApplication.language.getProperty("ModifyContact"));
 		modifyContactButton.setEnabled(false);
 		modifyContactButton.addActionListener(new ActionListener() {
 			@Override
@@ -181,7 +179,7 @@ public class ContactsInterface extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(jScrollPanelContact, gridBagConstraints);
 
-		removecontactButton.setText("Borrar contacto");
+		removecontactButton.setText(ContactApplication.language.getProperty("DeleteContact"));
 		removecontactButton.setEnabled(false);
 		removecontactButton.addActionListener(new ActionListener() {
 			@Override
@@ -198,9 +196,8 @@ public class ContactsInterface extends JFrame {
 
 		searchTextField.setBackground(new java.awt.Color(74, 74, 74));
 		searchTextField.setForeground(new java.awt.Color(255, 255, 255));
-		searchTextField.setText("Buscar...");
-		searchTextField.setToolTipText("Busca en la agenda");
-		searchTextField.setBorder(BorderFactory.createTitledBorder(null, "Buscar", TitledBorder.DEFAULT_JUSTIFICATION,
+		searchTextField.setText(ContactApplication.language.getProperty("Search2"));
+		searchTextField.setBorder(BorderFactory.createTitledBorder(null, ContactApplication.language.getProperty("Search"), TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, new Font("Dialog", 1, 12), new Color(255, 255, 255)));
 		searchTextField.setSelectedTextColor(new Color(255, 255, 255));
 		searchTextField.addFocusListener(new FocusAdapter() {
@@ -238,7 +235,7 @@ public class ContactsInterface extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(searchTextField, gridBagConstraints);
 
-		importCSVButton.setText("Importar CSV");
+		importCSVButton.setText(ContactApplication.language.getProperty("ImportCSV"));
 		importCSVButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				importButtonActionPerformed();
@@ -251,10 +248,10 @@ public class ContactsInterface extends JFrame {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(importCSVButton, gridBagConstraints);
 
-		logoURJC.setIcon(new ImageIcon(getClass().getResource("/imagenes/logo.png")));
+		logoURJC.setIcon(new ImageIcon(getClass().getResource("/images/logo.png")));
 		getContentPane().add(logoURJC, new GridBagConstraints());
 
-		exportCSVButton.setText("Exportar CSV");
+		exportCSVButton.setText(ContactApplication.language.getProperty("ExportCSV"));
 		exportCSVButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				exportButtonActionPerformed();
@@ -269,11 +266,13 @@ public class ContactsInterface extends JFrame {
 
 		getContentPane().setBackground(new Color(74, 74, 74));
 
+		this.setIconImage(FAVICON.getImage());
+		
 		pack();
 	}
 
 	private void search() {
-		if (this.searchTextField.getText().equals("Buscar...")) {
+		if (this.searchTextField.getText().equals(ContactApplication.language.getProperty("Search2"))) {
 			refreshList();
 		} else {
 			TreeSet<Contact> search = this.logicContacts.search(this.searchTextField.getText());
@@ -282,14 +281,14 @@ public class ContactsInterface extends JFrame {
 	}
 
 	private void searchFieldActionPerformed() {
-		if (searchTextField.getText().equals("Buscar...")) {
+		if (searchTextField.getText().equals(ContactApplication.language.getProperty("Search2"))) {
 			searchTextField.setText("");
 		}
 	}
 
 	private void searchFieldFocusLost() {
 		if (searchTextField.getText().equals("")) {
-			searchTextField.setText("Buscar...");
+			searchTextField.setText(ContactApplication.language.getProperty("Search2"));
 		}
 	}
 
@@ -317,9 +316,9 @@ public class ContactsInterface extends JFrame {
 		JPanel panel = (JPanel) this.jListContacts.getSelectedValue();
 		JLabel label = (JLabel) panel.getComponent(0);
 		Contact contact = this.logicContacts.getContact(label.getText());
-		label = new JLabel("¿Desea borrar el contacto seleccionado?");
+		label = new JLabel(ContactApplication.language.getProperty("DeleteContactWarning"));
 		label.setForeground(Color.WHITE);
-		int option = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_OPTION);
+		int option = JOptionPane.showConfirmDialog(null, label, ContactApplication.language.getProperty("Warning"), JOptionPane.YES_NO_OPTION);
 		switch (option) {
 		case 0:
 			// Si, borrar el contacto

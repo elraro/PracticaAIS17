@@ -22,6 +22,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
+import contacts.ContactApplication;
 import contacts.Phone;
 import contacts.TypePhone;
 
@@ -52,7 +53,7 @@ public class ModifyPhoneInterface extends JDialog {
 	private TypePhone oldTypePhone;
 
 	public ModifyPhoneInterface(JDialog father, Phone phone) {
-		super(father, "Modificar teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
+		super(father, ContactApplication.language.getProperty("ModifyPhone"), Dialog.ModalityType.DOCUMENT_MODAL);
 		initComponents();
 		this.oldPhone = new String(String.valueOf(phone.getPhoneNumber().getNationalNumber()));
 		this.oldTypePhone = phone.getType();
@@ -104,7 +105,7 @@ public class ModifyPhoneInterface extends JDialog {
 		getContentPane().setLayout(new GridBagLayout());
 
 		phoneLabel.setForeground(new Color(255, 255, 255));
-		phoneLabel.setText("Teléfono");
+		phoneLabel.setText(ContactApplication.language.getProperty("Phone"));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 0;
@@ -120,7 +121,7 @@ public class ModifyPhoneInterface extends JDialog {
 		getContentPane().add(phoneTextField, gridBagConstraints);
 
 		typeLabel.setForeground(new Color(255, 255, 255));
-		typeLabel.setText("Tipo");
+		typeLabel.setText(ContactApplication.language.getProperty("TypePhone"));
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 2;
@@ -128,7 +129,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(typeLabel, gridBagConstraints);
 
-		homeButton.setText("Casa");
+		homeButton.setText(ContactApplication.language.getProperty("Home"));
 		homeButton.setSelected(true);
 		this.typePhone = TypePhone.HOME;
 		homeButton.addActionListener(new ActionListener() {
@@ -145,7 +146,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(homeButton, gridBagConstraints);
 
-		officeButton.setText("Oficina");
+		officeButton.setText(ContactApplication.language.getProperty("Office"));
 		officeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -160,7 +161,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(officeButton, gridBagConstraints);
 
-		mobileButton.setText("Móvil");
+		mobileButton.setText(ContactApplication.language.getProperty("Mobile"));
 		mobileButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -175,7 +176,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(mobileButton, gridBagConstraints);
 
-		faxButton.setText("Fax");
+		faxButton.setText(ContactApplication.language.getProperty("Fax"));
 		faxButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -190,7 +191,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(faxButton, gridBagConstraints);
 
-		acceptButton.setText("Aceptar");
+		acceptButton.setText(ContactApplication.language.getProperty("Accept"));
 		acceptButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -203,7 +204,7 @@ public class ModifyPhoneInterface extends JDialog {
 		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
 		getContentPane().add(acceptButton, gridBagConstraints);
 
-		cancelButton.setText("Cancelar");
+		cancelButton.setText(ContactApplication.language.getProperty("Cancel"));
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -221,7 +222,7 @@ public class ModifyPhoneInterface extends JDialog {
 
 	private void cancelButtonActionPerformed(ActionEvent e) {
 		if (!this.phoneTextField.equals(this.oldPhone) || changes) {
-			JLabel label = new JLabel("¿Desea guardar los cambios?");
+			JLabel label = new JLabel(ContactApplication.language.getProperty("SaveChanges"));
 			label.setForeground(Color.WHITE);
 			int opcion = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (opcion) {
@@ -244,7 +245,7 @@ public class ModifyPhoneInterface extends JDialog {
 
 	private void save() {
 		if (this.phoneTextField.getText().length() < 3) {
-			JLabel label = new JLabel("El número insertado no es válido.");
+			JLabel label = new JLabel(ContactApplication.language.getProperty("WrongLengthNumber"));
 			label.setForeground(Color.WHITE);
 			JOptionPane.showMessageDialog(null, label);
 		} else {
@@ -253,7 +254,7 @@ public class ModifyPhoneInterface extends JDialog {
 				phoneUtil.parse(this.phoneTextField.getText(), "ES");
 				this.dispose();
 			} catch (NumberParseException ex) {
-				JLabel label = new JLabel("El número insertado no es válido.");
+				JLabel label = new JLabel(ContactApplication.language.getProperty("WrongNumber"));
 				label.setForeground(Color.WHITE);
 				JOptionPane.showMessageDialog(null, label);
 			}
@@ -266,13 +267,14 @@ public class ModifyPhoneInterface extends JDialog {
 
 	public Phone getPhone() {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		PhoneNumber phone;
 		try {
-			PhoneNumber phone = phoneUtil.parse(this.phoneTextField.getText(), "ES");
+			phone = phoneUtil.parse(this.phoneTextField.getText(), "ES");
 			return new Phone(phone, this.typePhone);
 		} catch (NumberParseException e) {
-			System.err.println("NumberParseException was thrown: " + e.toString());
+			return new Phone(null, this.typePhone);
 		}
-		return null; // TODO
+
 	}
 
 }
