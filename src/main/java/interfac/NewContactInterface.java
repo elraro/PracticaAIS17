@@ -240,16 +240,16 @@ public class NewContactInterface extends JDialog {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			switch (t.getType()) {
 			case HOME:
-				panel.add(new JLabel(t.getPhoneNumber(), HOME_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), HOME_ICON, JLabel.LEFT));
 				break;
 			case FAX:
-				panel.add(new JLabel(t.getPhoneNumber(), FAX_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), FAX_ICON, JLabel.LEFT));
 				break;
 			case MOBILE:
-				panel.add(new JLabel(t.getPhoneNumber(), MOBILE_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), MOBILE_ICON, JLabel.LEFT));
 				break;
 			case OFFICE:
-				panel.add(new JLabel(t.getPhoneNumber(), OFFICE_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), OFFICE_ICON, JLabel.LEFT));
 				break;
 			}
 			phonesAux.add(panel);
@@ -270,7 +270,8 @@ public class NewContactInterface extends JDialog {
 	private void addPhoneButtonMouseClicked(MouseEvent e) {
 		NewPhoneInterface newPhoneInterface = new NewPhoneInterface(this);
 		Phone phone = newPhoneInterface.getPhone();
-		if (!phone.getPhoneNumber().equals("")) {
+		System.out.println(phone);
+		if (!String.valueOf(phone.getPhoneNumber().getNationalNumber()).equals("")) {
 			this.listPhones.add(phone);
 			refreshListPhones();
 		}
@@ -281,7 +282,7 @@ public class NewContactInterface extends JDialog {
 		Phone phone = findPhone(labelPhone.getText(), labelPhone.getIcon());
 		ModifyPhoneInterface modifyPhoneInterface = new ModifyPhoneInterface(this, phone);
 		Phone mPhone = modifyPhoneInterface.getPhone();
-		if (!mPhone.getPhoneNumber().equals(phone.getPhoneNumber()) || mPhone.getType() != phone.getType()) {
+		if (!String.valueOf(mPhone.getPhoneNumber().getNationalNumber()).equals(String.valueOf(phone.getPhoneNumber().getNationalNumber())) || mPhone.getType() != phone.getType()) {
 			this.listPhones.remove(phone);
 			this.listPhones.add(mPhone);
 			refreshListPhones();
@@ -320,7 +321,7 @@ public class NewContactInterface extends JDialog {
 			type = TypePhone.OFFICE;
 		}
 		for (Phone f : this.listPhones) {
-			if (f.getPhoneNumber().equals(number) && f.getType() == type) {
+			if (String.valueOf(f.getPhoneNumber().getNationalNumber()).equals(number) && f.getType() == type) {
 				return f;
 			}
 		}

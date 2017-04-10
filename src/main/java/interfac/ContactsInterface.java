@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -33,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import contacts.Contact;
 import contacts.ContactsLogic;
@@ -201,14 +204,32 @@ public class ContactsInterface extends JFrame {
 				TitledBorder.DEFAULT_POSITION, new Font("Dialog", 1, 12), new Color(255, 255, 255)));
 		searchTextField.setSelectedTextColor(new Color(255, 255, 255));
 		searchTextField.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent evt) {
-				searchFieldFocusLost(evt);
+			public void focusLost(FocusEvent e) {
+				searchFieldFocusLost();
 			}
 		});
 		searchTextField.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				searchFieldActionPerformed(e);
+				searchFieldActionPerformed();
 			}
+		});
+		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				search();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				search();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				search();
+			}
+
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
@@ -219,8 +240,8 @@ public class ContactsInterface extends JFrame {
 
 		importCSVButton.setText("Importar CSV");
 		importCSVButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				importButtonActionPerformed(evt);
+			public void actionPerformed(ActionEvent e) {
+				importButtonActionPerformed();
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -235,8 +256,8 @@ public class ContactsInterface extends JFrame {
 
 		exportCSVButton.setText("Exportar CSV");
 		exportCSVButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				exportButtonActionPerformed(evt);
+			public void actionPerformed(ActionEvent e) {
+				exportButtonActionPerformed();
 			}
 		});
 		gridBagConstraints = new GridBagConstraints();
@@ -251,13 +272,22 @@ public class ContactsInterface extends JFrame {
 		pack();
 	}
 
-	private void searchFieldActionPerformed(MouseEvent e) {
+	private void search() {
+		if (this.searchTextField.getText().equals("Buscar...")) {
+			refreshList();
+		} else {
+			TreeSet<Contact> search = this.logicContacts.search(this.searchTextField.getText());
+			refreshListSearch(search);
+		}
+	}
+
+	private void searchFieldActionPerformed() {
 		if (searchTextField.getText().equals("Buscar...")) {
 			searchTextField.setText("");
 		}
 	}
 
-	private void searchFieldFocusLost(FocusEvent evt) {
+	private void searchFieldFocusLost() {
 		if (searchTextField.getText().equals("")) {
 			searchTextField.setText("Buscar...");
 		}
@@ -294,7 +324,7 @@ public class ContactsInterface extends JFrame {
 		case 0:
 			// Si, borrar el contacto
 			this.logicContacts.removeContact(contact);
-			refreshList();
+			search();
 			this.jListContacts.clearSelection();
 			this.listContactsFocusLost();
 			this.logicContacts.save();
@@ -313,16 +343,16 @@ public class ContactsInterface extends JFrame {
 		Contact modifiedContact = modifyContactInterface.getContact();
 		this.logicContacts.removeContact(contact);
 		this.logicContacts.addContact(modifiedContact);
-		refreshList();
+		search();
 		this.jListContacts.setSelectedIndex(this.logicContacts.getIndexContact(modifiedContact));
 		this.logicContacts.save();
 	}
 
-	private void importButtonActionPerformed(ActionEvent evt) {
+	private void importButtonActionPerformed() {
 		// TODO add your handling code here:
 	}
 
-	private void exportButtonActionPerformed(ActionEvent evt) {
+	private void exportButtonActionPerformed() {
 		// TODO add your handling code here:
 	}
 
@@ -332,6 +362,16 @@ public class ContactsInterface extends JFrame {
 	private void refreshList() {
 		List<JPanel> listcontactAux = new ArrayList<JPanel>();
 		for (Contact c : this.logicContacts.contactList()) {
+			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			panel.add(new JLabel(c.getName(), CONTACT_ICON, JLabel.LEFT));
+			listcontactAux.add(panel);
+		}
+		this.jListContacts.setListData(listcontactAux.toArray());
+	}
+
+	private void refreshListSearch(TreeSet<Contact> search) {
+		List<JPanel> listcontactAux = new ArrayList<JPanel>();
+		for (Contact c : search) {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			panel.add(new JLabel(c.getName(), CONTACT_ICON, JLabel.LEFT));
 			listcontactAux.add(panel);

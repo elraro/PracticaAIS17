@@ -30,6 +30,9 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+
 import contacts.Contact;
 import contacts.ContactsLogic;
 import contacts.Phone;
@@ -76,8 +79,13 @@ public class ModifyContactInterface extends JDialog {
 		this.oldName = new String(c.getName());
 		this.listPhones = c.getList();
 		this.oldPhoneList = new ArrayList<Phone>();
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		for (Phone p : this.listPhones) {
-			oldPhoneList.add(new Phone(new String(p.getPhoneNumber()), p.getType()));
+			try {
+				oldPhoneList.add(new Phone(phoneUtil.parse(String.valueOf(p.getPhoneNumber().getNationalNumber()), "ES"), p.getType()));
+			} catch (NumberParseException e) {
+				System.out.println("Ha petao"); // TODO
+			}
 		}
 		refreshListPhones();
 		setVisible(true);
@@ -250,16 +258,16 @@ public class ModifyContactInterface extends JDialog {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			switch (t.getType()) {
 			case HOME:
-				panel.add(new JLabel(t.getPhoneNumber(), HOME_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), HOME_ICON, JLabel.LEFT));
 				break;
 			case FAX:
-				panel.add(new JLabel(t.getPhoneNumber(), FAX_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), FAX_ICON, JLabel.LEFT));
 				break;
 			case MOBILE:
-				panel.add(new JLabel(t.getPhoneNumber(), MOBILE_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), MOBILE_ICON, JLabel.LEFT));
 				break;
 			case OFFICE:
-				panel.add(new JLabel(t.getPhoneNumber(), OFFICE_ICON, JLabel.LEFT));
+				panel.add(new JLabel(String.valueOf(t.getPhoneNumber().getNationalNumber()), OFFICE_ICON, JLabel.LEFT));
 				break;
 			}
 			phonesAux.add(panel);
@@ -330,7 +338,7 @@ public class ModifyContactInterface extends JDialog {
 			type = TypePhone.OFFICE;
 		}
 		for (Phone f : this.listPhones) {
-			if (f.getPhoneNumber().equals(number) && f.getType() == type) {
+			if (String.valueOf(f.getPhoneNumber().getNationalNumber()).equals(number) && f.getType() == type) {
 				return f;
 			}
 		}

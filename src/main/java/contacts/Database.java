@@ -1,6 +1,8 @@
 package contacts;
 
+import java.awt.Color;
 import java.io.BufferedInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +11,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  * @author Saul Alonso
@@ -61,6 +67,9 @@ public class Database {
 			objectInput.close();
 		} catch (FileNotFoundException e) {
 			file.createNewFile();
+		} catch (EOFException e) {
+			JLabel label = new JLabel("El fichero de la base de datos no es válido o está corrupto. Por favor, borralo o restaura una copia de seguridad.");
+			JOptionPane.showMessageDialog(null, label);
 		}
 	}
 
@@ -84,6 +93,27 @@ public class Database {
 				return node;
 		}
 		return null; // TODO
+	}
+
+	public TreeSet<Contact> search(String s) {
+		s = s.toLowerCase();
+		TreeSet<Contact> search = new TreeSet<Contact>();
+		Iterator<Contact> iterator = this.listContact.iterator();
+		while (iterator.hasNext()) {
+			Contact node = iterator.next();
+			List<Phone> phones = node.getList();
+			boolean phone = false;
+			for(Phone p : phones) {
+				if (String.valueOf(p.getPhoneNumber().getNationalNumber()).contains(s)) {
+					phone = true;
+					break;
+				}
+			}
+			if (node.getName().toLowerCase().contains(s) || phone) {
+				search.add(node);
+			}
+		}
+		return search;
 	}
 
 }

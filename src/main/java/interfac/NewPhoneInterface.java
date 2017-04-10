@@ -18,6 +18,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
 import contacts.Phone;
 import contacts.TypePhone;
 
@@ -212,11 +216,32 @@ public class NewPhoneInterface extends JDialog {
 	}
 
 	private void acceptButtonActionPerformed(ActionEvent e) {
-		this.dispose();
+		if (this.phoneTextField.getText().length() < 3) {
+			JLabel label = new JLabel("El número insertado no es válido.");
+			label.setForeground(Color.WHITE);
+			JOptionPane.showMessageDialog(null, label);
+		} else {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			try {
+				phoneUtil.parse(this.phoneTextField.getText(), "ES");
+				this.dispose();
+			} catch (NumberParseException ex) {
+				JLabel label = new JLabel("El número insertado no es válido.");
+				label.setForeground(Color.WHITE);
+				JOptionPane.showMessageDialog(null, label);
+			}
+		}
 	}
 
 	public Phone getPhone() {
-		return new Phone(this.phoneTextField.getText(), this.typePhone);
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		try {
+			PhoneNumber phone = phoneUtil.parse(this.phoneTextField.getText(), "ES");
+			return new Phone(phone, this.typePhone);
+		} catch (NumberParseException e) {
+			System.err.println("NumberParseException was thrown: " + e.toString());
+		}
+		return null; // TODO
 	}
 
 }

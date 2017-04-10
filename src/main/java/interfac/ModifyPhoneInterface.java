@@ -18,6 +18,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
 import contacts.Phone;
 import contacts.TypePhone;
 
@@ -50,9 +54,9 @@ public class ModifyPhoneInterface extends JDialog {
 	public ModifyPhoneInterface(JDialog father, Phone phone) {
 		super(father, "Modificar teléfono", Dialog.ModalityType.DOCUMENT_MODAL);
 		initComponents();
-		this.oldPhone = new String(phone.getPhoneNumber());
+		this.oldPhone = new String(String.valueOf(phone.getPhoneNumber().getNationalNumber()));
 		this.oldTypePhone = phone.getType();
-		this.phoneTextField.setText(phone.getPhoneNumber());
+		this.phoneTextField.setText(String.valueOf(phone.getPhoneNumber().getNationalNumber()));
 		this.typePhone = phone.getType();
 		this.homeButton.setSelected(false);
 		switch (phone.getType()) {
@@ -222,7 +226,11 @@ public class ModifyPhoneInterface extends JDialog {
 			int opcion = JOptionPane.showConfirmDialog(null, label, "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (opcion) {
 			case 0:
+				save();
+				break;
 			case 1:
+				this.phoneTextField.setText(this.oldPhone);
+				this.typePhone = this.oldTypePhone;
 				this.dispose();
 				break;
 			case 2:
@@ -234,12 +242,37 @@ public class ModifyPhoneInterface extends JDialog {
 		}
 	}
 
+	private void save() {
+		if (this.phoneTextField.getText().length() < 3) {
+			JLabel label = new JLabel("El número insertado no es válido.");
+			label.setForeground(Color.WHITE);
+			JOptionPane.showMessageDialog(null, label);
+		} else {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			try {
+				phoneUtil.parse(this.phoneTextField.getText(), "ES");
+				this.dispose();
+			} catch (NumberParseException ex) {
+				JLabel label = new JLabel("El número insertado no es válido.");
+				label.setForeground(Color.WHITE);
+				JOptionPane.showMessageDialog(null, label);
+			}
+		}
+	}
+
 	private void acceptButtonActionPerformed(ActionEvent e) {
-		this.dispose();
+		save();
 	}
 
 	public Phone getPhone() {
-		return new Phone(this.phoneTextField.getText(), this.typePhone);
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		try {
+			PhoneNumber phone = phoneUtil.parse(this.phoneTextField.getText(), "ES");
+			return new Phone(phone, this.typePhone);
+		} catch (NumberParseException e) {
+			System.err.println("NumberParseException was thrown: " + e.toString());
+		}
+		return null; // TODO
 	}
 
 }

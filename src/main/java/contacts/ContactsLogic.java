@@ -2,6 +2,7 @@ package contacts;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @author Oscar de la Cuesta Campillo. www.palentino.es
@@ -34,6 +35,10 @@ public class ContactsLogic {
 	
 	public int getIndexContact(Contact c) {
 		return this.contactList().indexOf(c);
+	}
+	
+	public TreeSet<Contact> search(String s) {
+		return this.database.search(s);
 	}
 	
 	public void save() {
