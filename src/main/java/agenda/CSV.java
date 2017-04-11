@@ -3,14 +3,19 @@ package agenda;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -31,20 +36,18 @@ public class CSV {
     	while(it.hasNext()){
     		Contacto aux = it.next();
     		contenido=contenido+aux.getNombre()+";";
-    		ArrayList<String> telefonos = aux.getTelefono();//Cambiar Long por String
+    		ArrayList<String> telefonos = aux.getTelefono();
     		for (int i=0;i<telefonos.size();i++){
     			contenido=contenido+telefonos.get(i)+";";
     		}
-    		contenido=contenido+"\n";
+    		contenido=contenido+"\r\n";
     	}
         File fichero = new File(System.getProperty("user.dir") + File.separator + ruta + File.separator);
-        FileOutputStream f = null;
-        ObjectOutputStream salida = null;
+        Writer f = null;
         try {
-            f = new FileOutputStream(fichero);
-            salida = new ObjectOutputStream(f);
-            salida.writeObject(contenido);
-            salida.close();
+            f = new BufferedWriter(new FileWriter(fichero));
+            f.write(contenido);
+            f.close();
 
         } catch (IOException e) {
 
@@ -54,28 +57,22 @@ public class CSV {
 
     public TreeSet<Contacto> ImportarCSV(String ruta) throws ClassNotFoundException, FileNotFoundException, IOException {
         File fichero = new File(System.getProperty("user.dir") + File.separator + ruta + File.separator);
-        String contenido;
-        FileInputStream fileInputStream;
-        ObjectInputStream objectInputStream;
-        BufferedInputStream bufferedInputStream;
+        String linea;
+        FileReader f=null;
+        BufferedReader bufferedReader = null;
         TreeSet<Contacto> lista_contactos = new TreeSet<>();
         try {
             if (fichero.exists()) {
-                fileInputStream = new FileInputStream(fichero);
-                bufferedInputStream = new BufferedInputStream(fileInputStream);
-                objectInputStream = new ObjectInputStream(bufferedInputStream);
-                contenido = (String) objectInputStream.readObject();
-                fileInputStream.close();
-                objectInputStream.close();
-                String [] contenidoaux  = contenido.split(";");
-                for(int i = 0; i < contenidoaux.length; i++){
-                	String nombre = contenidoaux[i];
+                f = new FileReader(fichero);
+                bufferedReader = new BufferedReader(f);
+                while ((linea = bufferedReader.readLine())!=null){
+                	String []contenido=linea.split(";");
+                	String nombre = contenido[0];
                 	ArrayList<String> numeros = new ArrayList<String>();
-                	while (isNumeric(contenidoaux[i+1])){
-                		i++;
-                		numeros.add(contenidoaux[i]);
+                	for (int i = 1; i <contenido.length;i++){
+                		numeros.add(contenido[i]);
                 	}
-                    Contacto contacto = new Contacto();
+                	Contacto contacto = new Contacto();
                     contacto.set_nombre(nombre);
                     contacto.set_telefonos(numeros);
                     lista_contactos.add(contacto);
