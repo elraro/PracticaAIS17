@@ -24,7 +24,7 @@ public class Agenda {
 
 	}
 
-	public void Anadir(String nombre, int telefono) {
+	public void Anadir(String nombre, String telefono) {
 		if (contador_contactos < 99) {
 			this.lista_contactos[contador_contactos] = new Contacto();
 			this.lista_contactos[contador_contactos].set_nombre(nombre);
@@ -102,7 +102,7 @@ public class Agenda {
 				// los objetos no referenciados creados. El garbage collector
 				for (int i = 0; i < this.contador_contactos; i++) {
 					this.lista_contactos[i].set_nombre("");
-					this.lista_contactos[i].set_telefono(0);
+					this.lista_contactos[i].set_telefono("0");
 				}
 				contador_contactos = 0;
 				System.out.println("Agenda vaciada correctamente");
@@ -207,7 +207,7 @@ public class Agenda {
 					System.out.println("Introduce nombre:");
 					String nombre_nuevo = teclado.readLine();
 					System.out.println("Introduce teléfono, formato numerico:");
-					int telefono_nuevo = Integer.parseInt(teclado.readLine());
+					String telefono_nuevo = teclado.readLine();
 
 					this.lista_contactos[modificar_numero - 1].set_nombre(nombre_nuevo);
 					this.lista_contactos[modificar_numero - 1].set_telefono(telefono_nuevo);
