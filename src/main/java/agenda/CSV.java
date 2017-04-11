@@ -25,19 +25,19 @@ public class CSV {
     private TreeSet<Contacto> lista_contactos = new TreeSet<>();
 
 
-    public static void ExportarCSV(TreeSet<Contacto>lista_contactos) throws IOException {
+    public static void ExportarCSV(TreeSet<Contacto>lista_contactos,String ruta) throws IOException {
     	Iterator<Contacto> it = lista_contactos.iterator();
     	String contenido = "";
     	while(it.hasNext()){
     		Contacto aux = it.next();
     		contenido=contenido+aux.getNombre()+";";
-    		ArrayList<Long> telefonos = aux.getNumeros();//Cambiar Long por String
+    		ArrayList<String> telefonos = aux.getTelefono();//Cambiar Long por String
     		for (int i=0;i<telefonos.size();i++){
     			contenido=contenido+telefonos.get(i)+";";
     		}
     		contenido=contenido+"\n";
     	}
-        File fichero = new File(System.getProperty("user.dir") + File.separator + "agenda.csv" + File.separator);
+        File fichero = new File(System.getProperty("user.dir") + File.separator + ruta + File.separator);
         FileOutputStream f = null;
         ObjectOutputStream salida = null;
         try {
@@ -52,8 +52,8 @@ public class CSV {
         System.out.println("Correcto!! Guardado..");
     }
 
-    public TreeSet<Contacto> ImportarCSV() throws ClassNotFoundException, FileNotFoundException, IOException {
-        File fichero = new File(System.getProperty("user.dir") + File.separator + "agenda.csv" + File.separator);
+    public TreeSet<Contacto> ImportarCSV(String ruta) throws ClassNotFoundException, FileNotFoundException, IOException {
+        File fichero = new File(System.getProperty("user.dir") + File.separator + ruta + File.separator);
         String contenido;
         FileInputStream fileInputStream;
         ObjectInputStream objectInputStream;
