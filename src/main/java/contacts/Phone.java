@@ -34,8 +34,23 @@ public class Phone implements Serializable, Comparable<Phone> {
 		this.type = type;
 	}
 
-	public Boolean equals(Phone t) {
-		return (this.getPhoneNumber().equals(t.getPhoneNumber()));
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Phone other = (Phone) obj;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
 	}
 
 	@Override
