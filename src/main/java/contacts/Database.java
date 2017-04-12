@@ -138,7 +138,7 @@ public class Database {
 			}
 			sb.append("\r\n");
 		}
-		File fichero = new File(System.getProperty("user.dir") + File.separator + path + File.separator);
+		File fichero = new File(path);
 		Writer f;
 		try {
 			f = new BufferedWriter(new FileWriter(fichero));
@@ -152,7 +152,7 @@ public class Database {
 	}
 
 	public void importCsv(String path) throws FileNotFoundException, IOException {
-		File fichero = new File(System.getProperty("user.dir") + File.separator + path + File.separator);
+		File fichero = new File(path);
 		String line;
 		FileReader f;
 		BufferedReader bufferedReader;

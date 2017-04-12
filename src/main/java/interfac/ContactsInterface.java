@@ -16,6 +16,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -24,6 +26,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -197,7 +200,8 @@ public class ContactsInterface extends JFrame {
 		searchTextField.setBackground(new java.awt.Color(74, 74, 74));
 		searchTextField.setForeground(new java.awt.Color(255, 255, 255));
 		searchTextField.setText(ContactApplication.language.getProperty("Search2"));
-		searchTextField.setBorder(BorderFactory.createTitledBorder(null, ContactApplication.language.getProperty("Search"), TitledBorder.DEFAULT_JUSTIFICATION,
+		searchTextField.setBorder(BorderFactory.createTitledBorder(null,
+				ContactApplication.language.getProperty("Search"), TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, new Font("Dialog", 1, 12), new Color(255, 255, 255)));
 		searchTextField.setSelectedTextColor(new Color(255, 255, 255));
 		searchTextField.addFocusListener(new FocusAdapter() {
@@ -267,7 +271,7 @@ public class ContactsInterface extends JFrame {
 		getContentPane().setBackground(new Color(74, 74, 74));
 
 		this.setIconImage(FAVICON.getImage());
-		
+
 		pack();
 	}
 
@@ -318,7 +322,8 @@ public class ContactsInterface extends JFrame {
 		Contact contact = this.logicContacts.getContact(label.getText());
 		label = new JLabel(ContactApplication.language.getProperty("DeleteContactWarning"));
 		label.setForeground(Color.WHITE);
-		int option = JOptionPane.showConfirmDialog(null, label, ContactApplication.language.getProperty("Warning"), JOptionPane.YES_NO_OPTION);
+		int option = JOptionPane.showConfirmDialog(null, label, ContactApplication.language.getProperty("Warning"),
+				JOptionPane.YES_NO_OPTION);
 		switch (option) {
 		case 0:
 			// Si, borrar el contacto
@@ -348,11 +353,38 @@ public class ContactsInterface extends JFrame {
 	}
 
 	private void importButtonActionPerformed() {
-		// TODO add your handling code here:
+		final JFileChooser fc = new JFileChooser();
+		int option = fc.showOpenDialog(this);
+		if (option == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			System.out.println("Abriendo: " + file.getName() + ".");
+			try {
+				this.logicContacts.importCsv(file.getAbsolutePath());
+				refreshList();
+				// TODO
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Cancelado");
+		}
 	}
 
 	private void exportButtonActionPerformed() {
-		// TODO add your handling code here:
+		final JFileChooser fc = new JFileChooser();
+		int option = fc.showOpenDialog(this);
+		if (option == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			System.out.println("Abriendo: " + file.getName() + ".");
+			try {
+				this.logicContacts.exportCsv(file.getAbsolutePath());
+				// TODO
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Cancelado");
+		}
 	}
 
 	/**

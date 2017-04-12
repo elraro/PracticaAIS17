@@ -1,4 +1,5 @@
 package contacts;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,14 @@ public class ContactsLogic {
 	
 	public void save() {
 		this.database.saveFile();
+	}
+	
+	public void importCsv(String path) throws FileNotFoundException, IOException {
+		this.database.importCsv(path);
+	}
+	
+	public void exportCsv(String path) throws IOException {
+		this.database.exportCsv(path);
 	}
 
 	/**
