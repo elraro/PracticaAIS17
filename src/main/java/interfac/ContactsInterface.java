@@ -17,6 +17,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import contacts.Contact;
 import contacts.ContactApplication;
@@ -56,6 +58,7 @@ public class ContactsInterface extends JFrame {
 
 	// Interface
 	private JButton removecontactButton;
+	private JButton viewContactButton;
 	private JButton exportCSVButton;
 	private JButton importCSVButton;
 	private JScrollPane jScrollPanelContact;
@@ -94,6 +97,7 @@ public class ContactsInterface extends JFrame {
 	private void initComponents() {
 		GridBagConstraints gridBagConstraints;
 
+		viewContactButton = new JButton();
 		newContactButton = new JButton();
 		modifyContactButton = new JButton();
 		jScrollPanelContact = new JScrollPane();
@@ -121,6 +125,21 @@ public class ContactsInterface extends JFrame {
 		setMinimumSize(new Dimension(426, 238));
 		setResizable(false);
 		getContentPane().setLayout(new GridBagLayout());
+		
+		viewContactButton.setText(ContactApplication.language.getProperty("ViewContact"));
+		viewContactButton.setEnabled(false);
+		viewContactButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				viewContactActionPerformed();
+			}
+		});
+		gridBagConstraints = new GridBagConstraints();
+		gridBagConstraints.gridx = 1;
+		gridBagConstraints.gridy = 1;
+		gridBagConstraints.fill = GridBagConstraints.BOTH;
+		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+		getContentPane().add(viewContactButton, gridBagConstraints);
 
 		newContactButton.setText(ContactApplication.language.getProperty("NewContact"));
 		newContactButton.addActionListener(new ActionListener() {
@@ -131,7 +150,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 1;
+		gridBagConstraints.gridy = 2;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(newContactButton, gridBagConstraints);
@@ -146,7 +165,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 2;
+		gridBagConstraints.gridy = 3;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(modifyContactButton, gridBagConstraints);
@@ -192,7 +211,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 3;
+		gridBagConstraints.gridy = 4;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(removecontactButton, gridBagConstraints);
@@ -234,7 +253,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 4;
+		gridBagConstraints.gridy = 5;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(searchTextField, gridBagConstraints);
@@ -247,7 +266,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 5;
+		gridBagConstraints.gridy = 6;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(importCSVButton, gridBagConstraints);
@@ -263,7 +282,7 @@ public class ContactsInterface extends JFrame {
 		});
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = 1;
-		gridBagConstraints.gridy = 6;
+		gridBagConstraints.gridy = 7;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new Insets(5, 5, 5, 5);
 		getContentPane().add(exportCSVButton, gridBagConstraints);
@@ -297,13 +316,22 @@ public class ContactsInterface extends JFrame {
 	}
 
 	private void listContactsMouseClicked() {
+		viewContactButton.setEnabled(true);
 		modifyContactButton.setEnabled(true);
 		removecontactButton.setEnabled(true);
 	}
 
 	private void listContactsFocusLost() {
+		viewContactButton.setEnabled(false);
 		modifyContactButton.setEnabled(false);
 		removecontactButton.setEnabled(false);
+	}
+	
+	private void viewContactActionPerformed() {
+		JPanel panel = (JPanel) this.jListContacts.getSelectedValue();
+		JLabel label = (JLabel) panel.getComponent(0);
+		Contact contact = this.logicContacts.getContact(label.getText());
+		ViewContactInterface viewContactInterface = new ViewContactInterface(this, contact, logicContacts);
 	}
 
 	private void newContactActionPerformed() {
@@ -354,6 +382,8 @@ public class ContactsInterface extends JFrame {
 
 	private void importButtonActionPerformed() {
 		final JFileChooser fc = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("csv files", "csv");
+		fc.setFileFilter(filter);
 		int option = fc.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
@@ -361,9 +391,12 @@ public class ContactsInterface extends JFrame {
 			try {
 				this.logicContacts.importCsv(file.getAbsolutePath());
 				refreshList();
-				// TODO
+				this.logicContacts.save();
 			} catch (IOException e) {
-				e.printStackTrace();
+				JLabel label = new JLabel(
+						ContactApplication.language.getProperty("CSVError"));
+				label.setForeground(Color.WHITE);
+				JOptionPane.showMessageDialog(this, label, ContactApplication.language.getProperty("Warning"), JOptionPane.WARNING_MESSAGE);
 			}
 		} else {
 			System.out.println("Cancelado");
@@ -372,6 +405,9 @@ public class ContactsInterface extends JFrame {
 
 	private void exportButtonActionPerformed() {
 		final JFileChooser fc = new JFileChooser();
+		fc.setDialogType(JFileChooser.SAVE_DIALOG);
+		fc.setSelectedFile(new File("contacts.csv"));
+		fc.setFileFilter(new FileNameExtensionFilter("csv files", "csv"));
 		int option = fc.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();

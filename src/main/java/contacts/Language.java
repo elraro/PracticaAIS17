@@ -17,6 +17,7 @@ public class Language {
 		}
 		// Main
 		english.put("ContactsTitle", "URJC Contacts");
+		english.put("ViewContact", "View contact");
 		english.put("NewContact", "New contact");
 		english.put("ModifyContact", "Modify Contact");
 		english.put("DeleteContact", "Delete Contact");
@@ -34,6 +35,7 @@ public class Language {
 		english.put("TypePhone", "Type");
 		english.put("Accept", "Accept");
 		english.put("Cancel", "Cancel");
+		english.put("Close", "Close");
 		english.put("SaveChanges", "Save changes?");
 		english.put("Yes", "Yes");
 		english.put("No", "No");
@@ -47,10 +49,12 @@ public class Language {
 		english.put("Office", "Office");
 		english.put("Fax", "Fax");
 		english.put("Mobile", "Mobile");
+		english.put("CSVError", "Error when trying import csv. Please check the file.");
 
 		//Spanish
 		spanish.put("ContactsTitle", "Agenda URJC");
 		spanish.put("NewContact", "Nuevo contacto");
+		spanish.put("ViewContact", "Ver contacto");
 		spanish.put("ModifyContact", "Modificar contacto");
 		spanish.put("DeleteContact", "Borrar contacto");
 		spanish.put("Search", "Buscar");
@@ -67,6 +71,7 @@ public class Language {
 		spanish.put("TypePhone", "Tipo");
 		spanish.put("Accept", "Aceptar");
 		spanish.put("Cancel", "Cancelar");
+		spanish.put("Close", "Cerrar");
 		spanish.put("SaveChanges", "¿Desea guardar los cambios?");
 		spanish.put("Yes", "Sí");
 		spanish.put("No", "No");
@@ -80,6 +85,7 @@ public class Language {
 		spanish.put("Office", "Oficina");
 		spanish.put("Fax", "Fax");
 		spanish.put("Mobile", "Móvil");
+		english.put("CSVError", "Error al intentar importar el csv. Por favor, comprueba el fichero.");
 	}
 
 	public String getProperty(String property) {

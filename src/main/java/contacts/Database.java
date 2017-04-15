@@ -76,7 +76,7 @@ public class Database {
 			fileInput.close();
 			objectInput.close();
 		} catch (FileNotFoundException e) {
-			file.createNewFile();
+			// file.createNewFile();
 		} catch (EOFException e) {
 			JLabel label = new JLabel(
 					"El fichero de la base de datos no es válido o está corrupto. Por favor, borralo o restaura una copia de seguridad.");
@@ -169,20 +169,20 @@ public class Database {
 				while(st.hasMoreElements()) {
 					try {
 						phones.add(new Phone(phoneUtil.parse(st.nextToken(), "ES"), TypePhone.valueOf(st.nextToken())));
-					} catch (NumberParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (IllegalArgumentException | NumberParseException e) {
+						throw new IOException();
 					}
 				}
 				Contact c = new Contact(name, phones);
 				listContact.add(c);
 			}
+			bufferedReader.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(e.getMessage());
+			throw new FileNotFoundException();
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			throw new IOException();
 		} catch (NoSuchElementException e) {
-			System.out.println(e.getMessage());
+			throw new NoSuchElementException();
 		}
 		this.listContact = listContact;
 		System.out.println("Correct import from csv");
